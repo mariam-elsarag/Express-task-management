@@ -66,7 +66,7 @@ userSchema.methods.comparePassword = async function (
 };
 
 // check password change after Iat of jwt
-userSchema.methods.checkChangePasswordAfterJwt = async function (jwtTimestamp) {
+userSchema.methods.isPasswordChangedAfterJwt = function (jwtTimestamp) {
   if (!this.password_change_at) {
     return false;
   }

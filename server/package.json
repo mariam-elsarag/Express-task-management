@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --env-file .env ./src/server.js"
+    "start": "nodemon --env-file ./.env ./src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -14,7 +14,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "express-mongo-sanitize": "^2.2.0",
     "helmet": "^8.1.0",
     "hpp": "^0.2.3",

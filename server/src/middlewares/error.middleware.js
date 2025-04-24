@@ -2,15 +2,14 @@
 import errorMessages from "../constants/errorMessages.js";
 
 // utils
-import appErrors from "../utils/appErrors.js";
+import AppError from "../utils/appErrors.js";
 
 // JWT Errors
-const handleJWTError = () =>
-  new appErrors(errorMessages.jwt.invalid_token, 401);
+const handleJWTError = () => new AppError(errorMessages.jwt.invalid_token, 401);
 const handleExpireJWTError = () =>
-  new appErrors(errorMessages.jwt.expired_token, 401);
+  new AppError(errorMessages.jwt.expired_token, 401);
 
-const handleInvalidId = () => new appErrors("Invalid ID", 400);
+const handleInvalidId = () => new AppError("Invalid ID", 400);
 
 // Database Errors (Duplicate Data)
 const handleDublicateDbData = (err) => {
@@ -20,12 +19,12 @@ const handleDublicateDbData = (err) => {
       : err.keyPattern.email
       ? "email"
       : "";
-    return new appErrors(
+    return new AppError(
       `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`,
       400
     );
   }
-  return new appErrors(err.message, 400);
+  return new AppError(err.message, 400);
 };
 
 // Validation Errors
@@ -36,7 +35,7 @@ const handleValidationError = (err) => {
       errors.push({ [key]: err.errors[key].properties.message });
     });
   }
-  return errors.length > 0 ? new appErrors(errors, 400) : null;
+  return errors.length > 0 ? new AppError(errors, 400) : null;
 };
 
 // Production Errors
@@ -71,8 +70,6 @@ const globalErrors = (err, req, res, next) => {
       error?.errors?.password?.path === "password"
     ) {
       error = handleValidationError(error) || error;
-    } else if (err.message.errors.start_time?.name === "ValidatorError") {
-      error = handleValidationError(error.message) || error;
     }
     if (error.name === "TokenExpiredError") error = handleExpireJWTError();
 

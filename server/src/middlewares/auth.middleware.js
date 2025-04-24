@@ -33,7 +33,7 @@ const verifyToken = async (token) => {
     throw new appErrors(errorMessages.user_not_found, 404);
   }
   // check if this token after user change password
-  if (await user.checkChangePasswordAfterJwt(decode.iat)) {
+  if (user.isPasswordChangedAfterJwt(decode.iat)) {
     throw new appErrors(errorMessages.jwt.expired_token, 401);
   }
   return user;
