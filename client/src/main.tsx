@@ -6,9 +6,15 @@ import "./assets/style/config/tailwind_config.css";
 import App from "./App.tsx";
 
 import "./assets/style/config/style.css";
+import { BrowserRouter } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <AuthProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </AuthProvider>
   </StrictMode>
 );

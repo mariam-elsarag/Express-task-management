@@ -1,4 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.auth_gradient {
+  background: linear-gradient(180deg, var(--color-primary-500) 0%, var(--color-primary-900) 84.79%, var(--color-primary-950) 100%);
 }/*# sourceMappingURL=style.css.map */
