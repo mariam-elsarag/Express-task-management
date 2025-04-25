@@ -6,22 +6,20 @@ import {
   namePattern,
   passwordPattern,
 } from "../../validation/pattern.js";
+import errorMessages from "../../constants/errorMessages.js";
 
 const userSchema = new mongoose.Schema(
   {
     full_name: {
       type: String,
       required: [true, "Full name is required"],
-      match: [
-        namePattern,
-        "Full name must be at least 2 characters long and contain only letters.",
-      ],
+      match: [namePattern, errorMessages.invalid_full_name],
     },
     email: {
       type: String,
       required: [true, "Email is required"],
       unique: true,
-      match: [emailPattern, "Please enter a valid email"],
+      match: [emailPattern, errorMessages.invalid_email],
     },
     avatar: String,
     role: {
@@ -32,10 +30,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "Password is required"],
-      match: [
-        passwordPattern,
-        "Weak password. Password must be at least 8 characters long and include lowercase letters, uppercase letters, and a special character.",
-      ],
+      match: [passwordPattern, errorMessages.week_password],
     },
     password_change_at: Date,
   },
@@ -50,6 +45,12 @@ const userSchema = new mongoose.Schema(
   }
 );
 
+userSchema.pre("save", function (next) {
+  if (this.email) {
+    this.email = this.email.toLowerCase();
+  }
+  next();
+});
 // hash password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();

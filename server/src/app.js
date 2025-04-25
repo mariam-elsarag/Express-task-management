@@ -36,7 +36,6 @@ app.all("*", (req, res, next) => {
   next(new AppErrors(`Can't find ${req.originalUrl} on this server`, 400));
 });
 
-// After all your route definitions
 // global error handling middleware
 app.use(globalErrors);
 export default app;

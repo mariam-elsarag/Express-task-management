@@ -40,14 +40,16 @@ const verifyToken = async (token) => {
 };
 
 // create jwt token
-export const createJWTToken = async (user) => {
+export const createJWTToken = (user) => {
   try {
     const token = jwt.sign(
-      { id: user._id, role: user.role }.process.env.JWT_SECRET,
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET_KEY,
       {
-        expiresIn: process.env.JWT_EXP,
+        expiresIn: process.env.JWT_EXPIRE_IN,
       }
     );
+
     return token;
   } catch (err) {
     logger.error("JWT Creation", err);
