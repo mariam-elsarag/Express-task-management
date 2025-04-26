@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema(
       match: [passwordPattern, errorMessages.week_password],
     },
     password_change_at: Date,
+
+    is_forget_password: Boolean,
+    otp_code: String,
+    otp_expire: Date,
   },
   {
     toJSON: {
@@ -72,6 +76,20 @@ userSchema.methods.isPasswordChangedAfterJwt = function (jwtTimestamp) {
     return false;
   }
   return this.password_change_at.getTime() > jwtTimestamp;
+};
+
+// generate otp
+userSchema.methods.generateOtp = async function (user, expire = 10) {
+  const otpcode = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashOtp = await bcrypt.hash(otpcode, 12);
+  user.otp_expire = Date.now() + expire * 60 * 1000;
+  user.otp_code = hashOtp;
+  return otpcode;
+};
+
+// check if this otp is right
+userSchema.methods.compareOtp = async function (candidateOtp, otp) {
+  return await bcrypt.compare(candidateOtp, otp);
 };
 
 const User = mongoose.model("User", userSchema);

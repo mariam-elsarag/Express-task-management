@@ -5,3 +5,5 @@ export const passwordPattern =
   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
 export const namePattern = /^[a-zA-Z\s]{2,}$/;
+
+export const otpPattern = /^\d{6}$/;
