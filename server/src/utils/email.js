@@ -29,7 +29,6 @@ Email.prototype.sendEmail = async function (html, subject) {
 
 // forgot password template
 Email.prototype.forgotPasswordEmail = async function () {
-  // fixed method name
   let template = fs.readFileSync(
     "../server/src/views/email_template/resetEmail.html",
     "utf-8"
@@ -45,5 +44,20 @@ Email.prototype.forgotPasswordEmail = async function () {
   });
   await this.sendEmail(template, `Forgot Password`);
 };
-
+Email.prototype.activateAccountEmail = async function () {
+  let template = fs.readFileSync(
+    "../server/src/views/email_template/activateAccount.html",
+    "utf-8"
+  );
+  const replacements = {
+    name: this.full_name,
+    resetLink: this.data.resetLink,
+    otpCode: this.data.otpCode,
+  };
+  Object.keys(replacements).forEach((key) => {
+    const value = replacements[key];
+    template = template.replace(new RegExp(`{{${key}}}`, "g"), value);
+  });
+  await this.sendEmail(template, `Activate account`);
+};
 export default Email;

@@ -44,9 +44,11 @@ export const login = asyncWrapper(async (req, res, next) => {
     return next(new AppErrors(errorMessages.invalid_credentials, 401));
   }
   // check user password
-
   if (!(await user.comparePassword(filterData.password, user.password))) {
     return next(new AppErrors(errorMessages.invalid_credentials, 401));
+  }
+  if (!user.is_active) {
+    return next(new AppErrors(errorMessages.activate_account, 403));
   }
   const token = createJWTToken(user);
 
@@ -107,9 +109,10 @@ export const createNewUser = asyncWrapper(async (req, res, next) => {
 });
 
 // forget password
-export const forgetPassword = asyncWrapper(async (req, res, next) => {
+export const sendOtp = asyncWrapper(async (req, res, next) => {
   const { email } = req.body;
-
+  const { is_forget } = req.query;
+  console.log(is_forget, "is forger");
   if (!email) {
     return next(new AppErrors(errorMessages.email_required, 400));
   }
@@ -120,25 +123,47 @@ export const forgetPassword = asyncWrapper(async (req, res, next) => {
   // check if this email exist
   const user = await User.findOne({ email });
   if (!user) {
-    return res
-      .status(200)
-      .json({ message: errorMessages.forger_password_message });
+    if (is_forget == "true") {
+      return res
+        .status(200)
+        .json({ message: errorMessages.forger_password_message });
+    } else {
+      return res
+        .status(200)
+        .json({ message: errorMessages.activate_account_message });
+    }
   }
-  logger.info("generat and send forget password email");
+  logger.info("generat and send  email");
+
+  if (is_forget == "true" && !user.is_active) {
+    return next(new AppErrors(errorMessages.activate_account, 403));
+  }
   // generate otp
   const otp = await user.generateOtp(user);
-  const resetLink = `${process.env.FRONT_SERVER}/otp?email=${email}`;
+  const resetLink = `${process.env.FRONT_SERVER}/otp?email=${email}&is_forget=${
+    is_forget ? true : false
+  }`;
   const data = {
     otpCode: otp,
     resetLink: resetLink,
   };
   const sendEmail = new Email(user, data);
   try {
-    await sendEmail.forgotPasswordEmail();
+    if (is_forget == "true") {
+      await sendEmail.forgotPasswordEmail();
+    } else {
+      await sendEmail.activateAccountEmail();
+    }
     await user.save({ validateBeforeSave: false });
-    return res
-      .status(200)
-      .json({ message: errorMessages.forger_password_message });
+    if (is_forget == true) {
+      return res
+        .status(200)
+        .json({ message: errorMessages.forger_password_message });
+    } else {
+      return res
+        .status(200)
+        .json({ message: errorMessages.activate_account_message });
+    }
   } catch (err) {
     logger.error("error send email", err);
     return next(new AppErrors("Error sending email!", 500));
@@ -147,6 +172,10 @@ export const forgetPassword = asyncWrapper(async (req, res, next) => {
 
 // verify otp
 export const verifyOtp = asyncWrapper(async (req, res, next) => {
+  const { is_forget } = req.query;
+  if (typeof is_forget === "undefined") {
+    return next(new AppErrors("Missing (is_forget) in query!", 400));
+  }
   const required = ["otp", "email"];
   const filterData = serializeBody(req.body, next, required);
   if (!filterData) {
@@ -172,11 +201,18 @@ export const verifyOtp = asyncWrapper(async (req, res, next) => {
     });
   }
   logger.info("Check otp");
+
   // check otp expire
   if (user.otp_code === null) {
-    return res.status(200).json({
-      message: errorMessages.otp.reset_message,
-    });
+    if (is_forget == "true") {
+      return res.status(200).json({
+        message: errorMessages.otp.reset_message,
+      });
+    } else {
+      return res.status(200).json({
+        message: errorMessages.otp.activate_message,
+      });
+    }
   }
   if (user?.otp_expire?.getTime() < Date.now()) {
     return next(new AppErrors({ otp: errorMessages.otp.expired }, 400));
@@ -186,13 +222,26 @@ export const verifyOtp = asyncWrapper(async (req, res, next) => {
   if (!(await user.compareOtp(filterData.otp, user.otp_code))) {
     return next(new AppErrors({ otp: errorMessages.otp.invalid }, 400));
   }
-  user.is_forget_password = true;
+  if (user.is_active === false) {
+    if (is_forget == "true") {
+      return next(new AppErrors(errorMessages.activate_account, 403));
+    } else {
+      user.is_active = true;
+    }
+  } else {
+    if (is_forget == "true") {
+      user.is_forget_password = true;
+    }
+  }
+
   user.otp_expire = null;
   user.otp_code = null;
   await user.save({ validateBeforeSave: false });
-  return res.status(200).json({
-    message: errorMessages.otp.reset_message,
-  });
+  const message =
+    is_forget == "true"
+      ? errorMessages.otp.reset_message
+      : errorMessages.otp.activate_message;
+  return res.status(200).json({ message });
 });
 // reset password
 export const resetPassword = asyncWrapper(async (req, res, next) => {
@@ -221,6 +270,9 @@ export const resetPassword = asyncWrapper(async (req, res, next) => {
     return res.status(200).json({
       message: errorMessages.otp.reset_message,
     });
+  }
+  if (!user.is_active) {
+    return next(new AppErrors(errorMessages.activate_account, 403));
   }
   // check if this user request to change password
   if (!user.is_forget_password) {

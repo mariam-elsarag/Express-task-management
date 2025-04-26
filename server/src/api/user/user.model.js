@@ -32,6 +32,10 @@ const userSchema = new mongoose.Schema(
       required: [true, "Password is required"],
       match: [passwordPattern, errorMessages.week_password],
     },
+    is_active: {
+      type: Boolean,
+      default: false,
+    },
     password_change_at: Date,
 
     is_forget_password: Boolean,

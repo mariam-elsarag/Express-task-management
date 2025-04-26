@@ -4,7 +4,7 @@ import multer from "multer";
 // controller
 import {
   createNewUser,
-  forgetPassword,
+  sendOtp,
   login,
   resetPassword,
   verifyOtp,
@@ -16,7 +16,7 @@ const upload = multer();
 router.route("/login").post(upload.none(), login);
 router.route("/register").post(upload.none(), createNewUser);
 
-router.route("/forget-password").post(upload.none(), forgetPassword);
+router.route("/otp").post(upload.none(), sendOtp);
 router.route("/verify-otp").post(upload.none(), verifyOtp);
 router.route("/reset-password").post(upload.none(), resetPassword);
 
