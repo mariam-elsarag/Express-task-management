@@ -100,12 +100,26 @@ export const createNewUser = asyncWrapper(async (req, res, next) => {
     avatar: `https://avatar.iran.liara.run/username?username=${filterData?.full_name}&background=1c1f2e&color=c5d0e6&length=1`,
   });
 
-  res.status(201).json({
-    userId: user._id,
-    email: user.email,
-    full_name: user.full_name,
-    avatar: user.avatar,
-  });
+  // generate otp and send it to user
+  const otp = await user.generateOtp(user);
+  const resetLink = `${process.env.FRONT_SERVER}/otp?email=${user.email}&is_forget=false`;
+  const data = {
+    otpCode: otp,
+    resetLink: resetLink,
+  };
+  const sendEmail = new Email(user, data);
+  try {
+    await sendEmail.activateAccountEmail();
+
+    res.status(201).json({
+      userId: user._id,
+      email: user.email,
+      full_name: user.full_name,
+      avatar: user.avatar,
+    });
+  } catch (err) {
+    return next(new AppErrors("Error sending email", 500));
+  }
 });
 
 // forget password

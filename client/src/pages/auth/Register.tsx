@@ -2,16 +2,16 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useForm } from "react-hook-form";
-import Form from "../../components/ui/form/Form";
-import { EmailIcon, KeyIcon } from "../../assets/icons/Icon";
-import Button from "../../components/ui/button/Button";
+import { emailPattern } from "../../utils/validation";
+import { EmailIcon, KeyIcon, UserIcon } from "../../assets/icons/Icon";
 import axiosInstance from "../../servicses/axiosInstance";
 import Cookies from "js-cookie";
-import { emailPattern } from "../../utils/validation";
-import { handleError } from "../../utils/handleErrors";
 import { toast } from "react-toastify";
+import { handleError } from "../../utils/handleErrors";
+import Form from "../../components/ui/form/Form";
+import Button from "../../components/ui/button/Button";
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
   const { setToken, setUser } = useAuth();
   const [loading, setLoading] = useState(false);
@@ -20,16 +20,38 @@ const Login = () => {
     control,
     setError,
     reset,
+    getValues,
     formState: { errors, dirtyFields, isDirty },
     handleSubmit,
   } = useForm({
-    defaultValues: { email: "", password: "" },
+    defaultValues: {
+      full_name: "",
+      email: "",
+      password: "",
+      confirm_password: "",
+    },
     mode: "onChange",
   });
   // ___________________ list ____________________
   const formList = [
     {
       id: 0,
+      formType: "input",
+      fieldName: "full_name",
+      validator: {
+        required: "Full name is required",
+        pattern: {
+          value: emailPattern,
+          message: "Please enter a valid email, e.g., example@domain.com.",
+        },
+      },
+      label: "Full name",
+      placeholder: "Enter your full name",
+      type: "text",
+      icon: <UserIcon />,
+    },
+    {
+      id: 1,
       formType: "input",
       fieldName: "email",
       validator: {
@@ -45,7 +67,7 @@ const Login = () => {
       icon: <EmailIcon />,
     },
     {
-      id: 1,
+      id: 2,
       formType: "password",
       fieldName: "password",
       validator: {
@@ -54,16 +76,30 @@ const Login = () => {
       placeholder: "********",
       label: "password",
       icon: <KeyIcon />,
-      hasForgetPassword: true,
+    },
+    {
+      id: 3,
+      formType: "password",
+      fieldName: "confirm_password",
+      validator: {
+        required: "Confirm password is required",
+        validate: (value) => {
+          const password = getValues("password");
+          return value === password || "Passwords do not match";
+        },
+      },
+      placeholder: "********",
+      label: "Confirm password",
+      icon: <KeyIcon />,
     },
   ];
 
-  // ___________________ login ____________________
+  // ___________________ register ____________________
 
   const onsubmit = async (data) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/auth/login", data);
+      const response = await axiosInstance.post("/api/auth/register", data);
       if (response?.status === 200) {
         console.log(response.data);
         setToken(response.data.token);
@@ -75,7 +111,7 @@ const Login = () => {
           avatar: response.data.avatar,
         });
         navigate("/home");
-        toast.success("Successfully loged in");
+        toast.success("Successfully create account");
       }
     } catch (err) {
       const { message, field } = handleError(err);
@@ -89,13 +125,13 @@ const Login = () => {
     }
   };
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-7">
       <form onSubmit={handleSubmit(onsubmit)} className="flex flex-col gap-6">
         <header className="flex flex-col gap-1">
           <h1 className="text-grey-300 font-bold text-lg lg:text-xl xl:text-2xl">
-            Hello Again!
+            Hello!
           </h1>
-          <p className="text-grey-300 text-sm">Welcome Back</p>
+          <p className="text-grey-300 text-sm">Sign Up to Get Started</p>
         </header>
         <div className="grid gap-4">
           <Form
@@ -106,14 +142,14 @@ const Login = () => {
           />
         </div>
         <footer className="flex items-center flex-col gap-3">
-          <Button buttonType="submit">Login</Button>
+          <Button buttonType="submit">Sign Up </Button>
         </footer>
       </form>
-      <p className="text-grey-300 text-xs text-center flex items-center  gap-1">
-        Don’t have an account ?<Link to="/register">Sign Up</Link>
+      <p className="text-grey-300 text-xs text-center flex items-center justify-center gap-1">
+        Have an account ?<Link to="/">Log in</Link>
       </p>
     </div>
   );
 };
 
-export default Login;
+export default Register;

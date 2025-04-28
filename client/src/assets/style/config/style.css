@@ -5,4 +5,41 @@ body {
 
 .auth_gradient {
   background: linear-gradient(180deg, var(--color-primary-500) 0%, var(--color-primary-900) 84.79%, var(--color-primary-950) 100%);
+}
+
+.p-inputotp {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+@media (max-width: 765px) {
+  .p-inputotp {
+    gap: 10px;
+  }
+}
+.p-inputotp-input {
+  width: 55px !important;
+  height: 55px !important;
+  border-radius: 14px;
+  -webkit-border-radius: 14px;
+  -moz-border-radius: 14px;
+  -ms-border-radius: 14px;
+  -o-border-radius: 14px;
+  border: 1px solid var(--color-grey-100) !important;
+}
+@media (max-width: 765px) {
+  .p-inputotp-input {
+    width: 45px !important;
+    height: 45px !important;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+  }
+}
+.p-inputotp .p-inputtext:enabled:focus {
+  box-shadow: 0 0 1px var(--color-gray-500);
+  border: 1px solid var(--color-gray-500) !important;
 }/*# sourceMappingURL=style.css.map */

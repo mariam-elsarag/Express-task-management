@@ -12,6 +12,7 @@ interface buttonPropsType {
   loading?: boolean;
   className?: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
+  round?: "lg" | "full";
 }
 
 const Button: React.FC<buttonPropsType> = ({
@@ -24,10 +25,15 @@ const Button: React.FC<buttonPropsType> = ({
   loading,
   className,
   target,
+  round = "lg",
 }) => {
-  const base = `outline-none  w-full rounded-full font-normal text-base flex items-center justify-center gap-2 h-[44px] px-4  transation-all ease-in-out duration-300 cursor-pointer`;
+  const radious = {
+    lg: "rounded-lg",
+    full: "rounded-full",
+  };
+  const base = ` ${radious[round]} outline-none  w-full  font-normal text-base flex items-center justify-center gap-2 h-[48px] px-4  transation-all ease-in-out duration-300 cursor-pointer`;
   const styles = {
-    primary: `${base} border-primary-500 bg-primary-500 text-white hover:bg-primary-400 `,
+    primary: `${base} border-primary-500 bg-primary-500 text-white hover:bg-primary-700 `,
     error: `${base} bg-error-800 text-white`,
   };
   if (to)

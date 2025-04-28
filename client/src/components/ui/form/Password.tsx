@@ -6,6 +6,8 @@ interface passwordType {
   name?: string;
   value: string;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleFocus: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleBlur: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
   placeholder?: string;
 }
@@ -14,7 +16,8 @@ const Password: React.FC<passwordType> = ({
   name,
   value,
   handleChange,
-
+  handleFocus,
+  handleBlur,
   placeholder,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -26,8 +29,10 @@ const Password: React.FC<passwordType> = ({
         name={name || "password"}
         value={value}
         onChange={handleChange}
-        className={` outline-0 shadow-none  !pr-12`}
+        className={` placeholder:text-sm  outline-0 shadow-none  !pr-12`}
         placeholder={placeholder}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
       <span
         onClick={() => setShowPassword((pre) => !pre)}

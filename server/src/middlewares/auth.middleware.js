@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../api/user/user.model.js";
 // utils
 import logger from "../utils/logger.js";
-import appErrors from "../utils/appErrors.js";
+import AppErrors from "../utils/appErrors.js";
 import asyncWrapper from "../utils/asyncWrapper.js";
 
 // constant
@@ -25,16 +25,19 @@ const verifyToken = async (token) => {
   // check if this my token
   const decode = jwt.verify(token, process.env.JWT_SECRET);
   if (!decode) {
-    throw new appErrors(errorMessages.jwt.unautorized_access, 401);
+    throw new AppErrors(errorMessages.jwt.unautorized_access, 401);
   }
   const user = await User.findById(decode.id);
   // check if user not found
   if (!user) {
-    throw new appErrors(errorMessages.user_not_found, 404);
+    throw new AppErrors(errorMessages.user_not_found, 404);
+  }
+  if (!user.is_active) {
+    throw new AppErrors(errorMessages.activate_account, 403);
   }
   // check if this token after user change password
   if (user.isPasswordChangedAfterJwt(decode.iat)) {
-    throw new appErrors(errorMessages.jwt.expired_token, 401);
+    throw new AppErrors(errorMessages.jwt.expired_token, 401);
   }
   return user;
 };
@@ -61,7 +64,7 @@ export const protect = (requireAuthentication = true) => {
   return asyncWrapper(async (req, res, next) => {
     const token = await extractHeader(req);
     if (requireAuthentication && !token) {
-      return next(new appErrors(errorMessages.unautorized_access, 401));
+      return next(new AppErrors(errorMessages.unautorized_access, 401));
     }
     if (token) {
       const user = await verifyToken(token);
@@ -76,7 +79,7 @@ export const protect = (requireAuthentication = true) => {
 export const authorized = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new appErrors(errorMessages.jwt.access_denied, 403));
+      return next(new AppErrors(errorMessages.jwt.access_denied, 403));
     }
     next();
   };

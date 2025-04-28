@@ -1,7 +1,8 @@
 import { Control, Controller, FieldError } from "react-hook-form";
 import Password from "./Password";
-import React from "react";
-
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { InputOtp } from "primereact/inputotp";
 interface FormItemType {
   id?: string;
   formType?: "input" | "textarea" | "password";
@@ -15,6 +16,7 @@ interface FormItemType {
   groupWith?: number;
   isGrouped?: boolean;
   icon?: React.ReactNode;
+  style?: string;
 }
 
 interface FormProps {
@@ -25,22 +27,28 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
+  const [focusedField, setFocusedField] = useState(null);
   const renderField = (
     item: FormItemType,
     field: { value: any; onChange: (e: any) => void },
     error?: FieldError
   ) => {
+    const isFocused = focusedField === item.id;
     const errorClass = error ? "border-red-500" : "border-blue-800";
 
     switch (item.formType) {
       case "input":
         return (
           <div
-            className={` ${
+            className={`  ${
               errors[item?.fieldName] || error
                 ? "border-error-800"
+                : isFocused
+                ? "border-gray-500"
                 : " border-grey-100"
-            } flex items-center gap-2 border px-3 py-2.5 `}
+            } flex items-center gap-2 border px-3 py-3  h-[48px] ${
+              item?.style ? item?.style : "rounded-lg"
+            } `}
           >
             {item?.icon}
             <input
@@ -49,8 +57,10 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
               name={item.name || ""}
               value={field.value ?? ""}
               onChange={field.onChange}
-              className={`w-full h-full outline-0 shadow-none text-grey-300 `}
+              className={`w-full h-full outline-0 shadow-none text-grey-300 placeholder:text-sm`}
               placeholder={item.placeholder}
+              onFocus={() => setFocusedField(item?.id)}
+              onBlur={() => setFocusedField(null)}
             />
           </div>
         );
@@ -60,8 +70,12 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             className={` ${
               errors[item?.fieldName] || error
                 ? "border-error-800"
+                : isFocused
+                ? "border-gray-500"
                 : " border-grey-100"
-            } flex items-center gap-2 border px-3 py-2.5 `}
+            } flex items-center gap-2 border px-3 py-3  h-[48px] ${
+              item?.style ? item?.style : "rounded-lg"
+            }  `}
           >
             {item?.icon}
             <Password
@@ -70,8 +84,22 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
               value={field.value ?? ""}
               handleChange={field.onChange}
               placeholder={item.placeholder}
+              handleFocus={() => setFocusedField(item?.id)}
+              handleBlur={() => setFocusedField(null)}
             />
           </div>
+        );
+      case "otp":
+        return (
+          <InputOtp
+            value={field?.value}
+            onChange={(e) => {
+              field.onChange(e.value);
+            }}
+            disabled={item?.disabled || loading}
+            integerOnly
+            className="otp"
+          />
         );
       case "textarea":
         return (
@@ -79,8 +107,12 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             className={` ${
               errors[item?.fieldName] || error
                 ? "border-error-800"
+                : isFocused
+                ? "border-gray-500"
                 : " border-grey-100"
-            } flex items-center gap-2 border px-3 py-2.5 `}
+            } flex items-center gap-2 border px-3 py-3  h-[48px] ${
+              item?.style ? item?.style : "rounded-lg"
+            }  `}
           >
             {item?.icon}
             <textarea
@@ -90,6 +122,8 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
               onChange={field.onChange}
               className={`outline-0 shadow-none  resize-none !h-auto !min-h-[100px] `}
               placeholder={item.placeholder}
+              onFocus={() => setFocusedField(item?.id)}
+              onBlur={() => setFocusedField(null)}
             />
           </div>
         );
@@ -110,7 +144,12 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
                   className={`flex flex-col gap-2  text-base capitalize `}
                   key={fieldItem.id}
                 >
-                  <label htmlFor={fieldItem?.id}>{fieldItem?.label}</label>
+                  <label
+                    className="text-grey-300 text-sm font-[500]"
+                    htmlFor={fieldItem?.id}
+                  >
+                    {fieldItem?.label}
+                  </label>
                   <Controller
                     name={fieldItem?.fieldName}
                     control={control}
@@ -134,7 +173,12 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
               className={`grid gap-2 text-base capitalize ${item?.className} col-span-2`}
               key={item.id}
             >
-              <label htmlFor={item?.id}>{item?.label}</label>
+              <label
+                className="text-grey-300 text-sm font-[500]"
+                htmlFor={item?.id}
+              >
+                {item?.label}
+              </label>
               <Controller
                 name={item?.fieldName}
                 control={control}
@@ -143,11 +187,26 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
                   renderField(item, field, error)
                 }
               />
-              {errors[item?.fieldName] && (
-                <p className="text-error-800 text-xs">
-                  {errors[item?.fieldName]?.message}
-                </p>
-              )}
+              <div
+                className={`flex gap-2 ${
+                  errors[item?.fieldName] ? "justify-between" : "justify-end"
+                } `}
+              >
+                {errors[item?.fieldName] && (
+                  <p className="text-error-800 text-xs">
+                    {errors[item?.fieldName]?.message}
+                  </p>
+                )}
+
+                {item?.hasForgetPassword && (
+                  <Link
+                    to="/forget-password"
+                    className="text-grey-300 text-end text-xs "
+                  >
+                    Forget password?
+                  </Link>
+                )}
+              </div>
             </fieldset>
           );
         } else {

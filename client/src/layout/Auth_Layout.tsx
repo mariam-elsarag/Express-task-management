@@ -5,8 +5,10 @@ import { UnauthLayoutImg } from "../assets/images/Image";
 const Auth_Layout = () => {
   return (
     <div className="h-screen flex ">
-      <div className="w-1/2">
-        <Outlet />
+      <div className="w-1/2 flex flex-col px-10 py-5 justify-center">
+        <div className="w-[95%] ">
+          <Outlet />
+        </div>
       </div>
       <figure className="w-1/2 auth_gradient relative ">
         <img
