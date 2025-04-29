@@ -31,24 +31,25 @@ const Otp = () => {
   });
   // verify otp
   const onSubmit = async (data) => {
-    if (type === "active") {
-      navigate("/account/login");
-    } else {
-      navigate(`/account/${email}/reset-password`);
-    }
     try {
       setLoading(true);
-      const response = await axiosInstance.put(`/api/auth/otp`, data);
+      const response = await axiosInstance.post(
+        `/api/auth/verify-otp?is_forget=${type == "active" ? false : true}`,
+        data
+      );
       if (response.status === 200) {
         Cookies.remove("otp_timer");
+        toast.success(response.data.message);
         if (type === "active") {
-          navigate("/account/login");
+          navigate("/");
         } else {
-          navigate(`/account/${email}/reset-password`);
+          navigate(`/${email}/reset-password`);
         }
       }
     } catch (err) {
-      console.log("error", err);
+      console.log(err);
+      const formField = ["otp", "email"];
+      handleError(err, setError, formField);
       //only if from backend
       // setRemainingTime(0);
     } finally {
@@ -61,12 +62,11 @@ const Otp = () => {
     setRemainingTime(600);
     Cookies.set("otp_timer", 600, { expires: 1 / 1440 });
     try {
-      const response = await axiosInstance.post("/api/otp", {
+      const response = await axiosInstance.post("/api/auth/otp", {
         email: email,
       });
     } catch (err) {
-      const { message } = handleError(err);
-      toast.error(message);
+      handleError(err, setError, []);
     }
   };
 

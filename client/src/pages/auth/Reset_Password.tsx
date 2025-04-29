@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { KeyIcon } from "../../assets/icons/Icon";
 import { passwordPattern } from "../../utils/validation";
 import Form from "../../components/ui/form/Form";
 import Button from "../../components/ui/button/Button";
 import { toast } from "react-toastify";
 import { handleError } from "../../utils/handleErrors";
+import axiosInstance from "../../servicses/axiosInstance";
 
 const Reset_Password = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { email } = useParams();
   // ___________________ use form ____________________
   const {
     control,
@@ -20,7 +22,7 @@ const Reset_Password = () => {
     formState: { errors, dirtyFields, isDirty },
     handleSubmit,
   } = useForm({
-    defaultValues: { password: "", confirm_password: "" },
+    defaultValues: { email, password: "", confirm_password: "" },
     mode: "onChange",
   });
   // ___________________ list ____________________
@@ -61,19 +63,17 @@ const Reset_Password = () => {
   const onsubmit = async (data) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/auth/login", data);
+      const response = await axiosInstance.post(
+        "/api/auth/reset-password",
+        data
+      );
       if (response?.status === 200) {
-        console.log(response.data);
-
-        navigate("/home");
-        toast.success("Successfully Reset password");
+        toast.success(response.data.message);
+        navigate("/");
       }
     } catch (err) {
-      const { message, field } = handleError(err);
-      setError(field, {
-        type: "manual",
-        message,
-      });
+      handleError(err, setError, ["password"]);
+
       // console.log("error", err);
     } finally {
       setLoading(false);

@@ -99,6 +99,7 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             disabled={item?.disabled || loading}
             integerOnly
             className="otp"
+            length={6}
           />
         );
       case "textarea":

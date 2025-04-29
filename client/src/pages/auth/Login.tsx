@@ -78,12 +78,16 @@ const Login = () => {
         toast.success("Successfully loged in");
       }
     } catch (err) {
-      const { message, field } = handleError(err);
-      setError(field, {
-        type: "manual",
-        message,
-      });
-      // console.log("error", err);
+      if (
+        err.response.data.errors.includes(
+          "Your account is not activated yet. Please check your email to verify your account before proceeding."
+        )
+      ) {
+        navigate(`/${data?.email}/active/otp`);
+      }
+      // console.log(err);
+      const formFields = ["email", "password"];
+      handleError(err, setError, formFields);
     } finally {
       setLoading(false);
     }

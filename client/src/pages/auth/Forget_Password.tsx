@@ -48,26 +48,23 @@ const Forget_Password = () => {
   const onsubmit = async (data) => {
     try {
       setLoading(true);
-      const response = await axiosInstance.post("/api/auth/otp", data);
+      const response = await axiosInstance.post(
+        "/api/auth/otp?is_forget=true",
+        data
+      );
       if (response?.status === 200) {
-        console.log(response.data);
+        navigate(`/${data?.email}/forget/otp`);
       }
     } catch (err) {
-      const { message, field } = handleError(err);
-      setError(field, {
-        type: "manual",
-        message,
-      });
+      handleError(err, setError, ["email"]);
+
       // console.log("error", err);
     } finally {
       setLoading(false);
     }
   };
   return (
-    <form
-      onSubmit={handleSubmit(onsubmit)}
-      className="w-[400px] mx-auto flex flex-col gap-6"
-    >
+    <form onSubmit={handleSubmit(onsubmit)} className=" flex flex-col gap-6">
       <header className="flex flex-col gap-1">
         <h1 className="text-grey-300 font-bold text-lg lg:text-xl xl:text-2xl">
           {title}

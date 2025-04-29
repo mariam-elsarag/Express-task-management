@@ -126,7 +126,7 @@ export const createNewUser = asyncWrapper(async (req, res, next) => {
 export const sendOtp = asyncWrapper(async (req, res, next) => {
   const { email } = req.body;
   const { is_forget } = req.query;
-  console.log(is_forget, "is forger");
+
   if (!email) {
     return next(new AppErrors(errorMessages.email_required, 400));
   }

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { useForm } from "react-hook-form";
-import { emailPattern } from "../../utils/validation";
+import { emailPattern, passwordPattern } from "../../utils/validation";
 import { EmailIcon, KeyIcon, UserIcon } from "../../assets/icons/Icon";
 import axiosInstance from "../../servicses/axiosInstance";
 import Cookies from "js-cookie";
@@ -40,10 +40,6 @@ const Register = () => {
       fieldName: "full_name",
       validator: {
         required: "Full name is required",
-        pattern: {
-          value: emailPattern,
-          message: "Please enter a valid email, e.g., example@domain.com.",
-        },
       },
       label: "Full name",
       placeholder: "Enter your full name",
@@ -72,6 +68,11 @@ const Register = () => {
       fieldName: "password",
       validator: {
         required: "Password is required",
+        pattern: {
+          value: passwordPattern,
+          message:
+            "Password must be 8+ characters, with uppercase, lowercase, a number, and a special character.",
+        },
       },
       placeholder: "********",
       label: "password",
@@ -100,25 +101,13 @@ const Register = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post("/api/auth/register", data);
-      if (response?.status === 200) {
-        console.log(response.data);
-        setToken(response.data.token);
-        Cookies.set("token", response.data.token);
-        Cookies.set("avatar", response.data.avatar);
-        Cookies.set("full_name", response.data.full_name);
-        setUser({
-          full_name: response.data.full_name,
-          avatar: response.data.avatar,
-        });
-        navigate("/home");
+      if (response?.status === 201) {
+        navigate(`/${data?.email}/active/otp`);
         toast.success("Successfully create account");
       }
     } catch (err) {
-      const { message, field } = handleError(err);
-      setError(field, {
-        type: "manual",
-        message,
-      });
+      const formFields = ["full_name", "email", "password"];
+      handleError(err, setError, formFields);
       // console.log("error", err);
     } finally {
       setLoading(false);
@@ -142,7 +131,9 @@ const Register = () => {
           />
         </div>
         <footer className="flex items-center flex-col gap-3">
-          <Button buttonType="submit">Sign Up </Button>
+          <Button buttonType="submit" loading={loading}>
+            Sign Up{" "}
+          </Button>
         </footer>
       </form>
       <p className="text-grey-300 text-xs text-center flex items-center justify-center gap-1">
