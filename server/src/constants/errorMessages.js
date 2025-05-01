@@ -33,6 +33,23 @@ const errorMessages = {
   task_not_found: "Task does not exist or has been deleted.",
   validation_failed: "Some fields are missing or invalid.",
   server_error: "Something went wrong. Please try again later.",
+  project: {
+    name: "Project name is required",
+    user: "User is required",
+    role: "Select user role ['owner', 'manager', 'contributor']",
+    start_date: "Start date is required",
+    end_date: "End date is required",
+    createdBy: "Created by is required",
+    invalidDateRange: "End date must be later than start date.",
+  },
+  task: {
+    priority: "Select priority of task (high, medium, low)",
+    name: "Task name is required",
+    dueDate: "Due date is required",
+  },
+  invite_team_member: {
+    invitedUsers: "Invited users is required",
+  },
 };
 
 export default errorMessages;
