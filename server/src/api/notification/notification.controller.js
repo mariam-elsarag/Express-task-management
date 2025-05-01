@@ -28,7 +28,7 @@ export const notificationList = asyncWrapper(async (req, res, next) => {
       list.is_invited = item?.is_invited;
     }
     return {
-      list,
+      ...list,
     };
   });
   res.status(200).json(notification);
