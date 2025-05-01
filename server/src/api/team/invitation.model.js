@@ -5,22 +5,31 @@ const invitationsSchema = new mongoose.Schema(
     team: {
       type: Schema.Types.ObjectId,
       ref: "Team",
-      required: [true, "Team is requied"],
+      required: [true, "Team is required"],
     },
-    invited_user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "invited users is requried"],
-    },
-    status: {
-      type: String,
-      enum: ["pending", "accepted", "rejected"],
-      default: "pending",
-    },
+    invited_users: [
+      {
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: [true, "User is required"],
+        },
+        role: {
+          type: String,
+          enum: ["leader", "member", "viewer"],
+          default: "member",
+        },
+        status: {
+          type: String,
+          enum: ["pending", "accepted", "rejected"],
+          default: "pending",
+        },
+      },
+    ],
     invited_by: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: [true, "Invited by is required"],
     },
   },
   {
@@ -33,5 +42,6 @@ const invitationsSchema = new mongoose.Schema(
     },
   }
 );
+
 const Invitation = mongoose.model("Invitation", invitationsSchema);
 export default Invitation;

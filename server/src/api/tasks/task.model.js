@@ -46,6 +46,8 @@ const taskSchema = new mongoose.Schema(
       ref: "User",
       required: [true, errorMessages.project.createdBy],
     },
+    attachments: String,
+    Labels: [String],
   },
   {
     timestamps: true,

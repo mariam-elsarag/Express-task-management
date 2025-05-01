@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 const teamSchema = new mongoose.Schema(
   {
     name: {
@@ -6,8 +8,16 @@ const teamSchema = new mongoose.Schema(
     },
     members: [
       {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        user: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+          required: [true, "User is required"],
+        },
+        role: {
+          type: String,
+          enum: ["leader", "member", "viewer"],
+          default: "member",
+        },
       },
     ],
     created_by: {
@@ -22,6 +32,7 @@ const teamSchema = new mongoose.Schema(
       transform: (doc, ret) => {
         ret.team_id = ret._id;
         delete ret._id;
+        delete ret.__v;
       },
     },
   }

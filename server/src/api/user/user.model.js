@@ -21,6 +21,10 @@ const userSchema = new mongoose.Schema(
       unique: true,
       match: [emailPattern, errorMessages.invalid_email],
     },
+    job_title: {
+      type: String,
+      default: "",
+    },
     avatar: String,
     role: {
       type: String,
@@ -79,7 +83,11 @@ userSchema.methods.isPasswordChangedAfterJwt = function (jwtTimestamp) {
   if (!this.password_change_at) {
     return false;
   }
-  return this.password_change_at.getTime() > jwtTimestamp;
+
+  return (
+    Math.floor(new Date(this.password_change_at).getTime() / 1000) >
+    jwtTimestamp
+  );
 };
 
 // generate otp

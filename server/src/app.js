@@ -14,6 +14,8 @@ import globalErrors from "./middlewares/error.middleware.js";
 
 // routes
 import authRoutes from "./api/auth/auth.route.js";
+import teamRoutes from "./api/team/team.route.js";
+import notificationRoutes from "./api/notification/notification.route.js";
 
 const app = express();
 
@@ -30,6 +32,8 @@ app.use(mongoSanitize());
 
 // routes
 app.use("/api/auth", authRoutes);
+app.use("/api/team", teamRoutes);
+app.use("/api/notification", notificationRoutes);
 
 // handle unmatched  routes
 app.all("*", (req, res, next) => {
