@@ -2,7 +2,10 @@ import express from "express";
 import multer from "multer";
 
 // controller
-import { notificationList } from "./notification.controller.js";
+import {
+  notificationList,
+  readNotification,
+} from "./notification.controller.js";
 
 // middleware
 import { protect } from "../../middlewares/auth.middleware.js";
@@ -10,5 +13,7 @@ import { protect } from "../../middlewares/auth.middleware.js";
 const router = express.Router();
 const upload = multer();
 
-router.route("/").get(protect(), notificationList);
+router.use(protect());
+router.route("/").get(notificationList);
+router.route("/:id").patch(readNotification);
 export default router;
