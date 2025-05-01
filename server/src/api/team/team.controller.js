@@ -54,6 +54,7 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
           type: "invitation",
           message: `${user.full_name} invited to join ${team.name}`,
           type_id: team._id,
+          is_invited: true,
         });
       })
     );

@@ -16,13 +16,19 @@ export const notificationList = asyncWrapper(async (req, res, next) => {
   ).paginate(20);
   const notification = await feature.getPaginations(Notification, req);
   notification.results = notification.results?.map((item) => {
-    return {
+    let list = {
       notification_id: item?._id,
       type: item?.type,
       type_id: item?.type_id,
       message: item?.message,
       read: item?.read,
       createdAt: item.createdAt,
+    };
+    if (item?.type === "invitation") {
+      list.is_invited = item?.is_invited;
+    }
+    return {
+      list,
     };
   });
   res.status(200).json(notification);

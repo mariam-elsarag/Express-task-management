@@ -11,6 +11,10 @@ const notificationSchema = new mongoose.Schema(
       enum: ["invitation", "reminder", "alert", "message", "announcement"], // Notification types
       required: [true, "type is required"],
     },
+    is_invited: {
+      type: Boolean,
+      default: false,
+    },
     message: {
       type: String,
       required: [true, "Message is required"],
