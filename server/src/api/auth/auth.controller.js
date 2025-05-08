@@ -135,21 +135,14 @@ export const sendOtp = asyncWrapper(async (req, res, next) => {
     return next(new AppErrors(errorMessages.invalid_email, 400));
   }
   // check if this email exist
+  // check if this email exist
   const user = await User.findOne({ email });
   if (!user) {
-    if (is_forget == "true") {
-      return res
-        .status(200)
-        .json({ message: errorMessages.forger_password_message });
-    } else {
-      return res
-        .status(200)
-        .json({ message: errorMessages.activate_account_message });
-    }
+    return next(new AppErrors(errorMessages.user_not_found, 404));
   }
   logger.info("generat and send  email");
 
-  if (is_forget == "true" && !user.is_active) {
+  if (!user.is_active) {
     return next(new AppErrors(errorMessages.activate_account, 403));
   }
   // generate otp
@@ -172,7 +165,7 @@ export const sendOtp = asyncWrapper(async (req, res, next) => {
     if (is_forget == true) {
       return res
         .status(200)
-        .json({ message: errorMessages.forger_password_message });
+        .json({ message: errorMessages.forget_password_message });
     } else {
       return res
         .status(200)
@@ -211,22 +204,14 @@ export const verifyOtp = asyncWrapper(async (req, res, next) => {
   const user = await User.findOne({ email: filterData.email });
   if (!user) {
     return res.status(200).json({
-      message: errorMessages.otp.reset_message,
+      message: errorMessages.user_not_found,
     });
   }
   logger.info("Check otp");
 
   // check otp expire
   if (user.otp_code === null) {
-    if (is_forget == "true") {
-      return res.status(200).json({
-        message: errorMessages.otp.reset_message,
-      });
-    } else {
-      return res.status(200).json({
-        message: errorMessages.otp.activate_message,
-      });
-    }
+    return next(new AppErrors(errorMessages.otp.otp_required_message, 400));
   }
   if (user?.otp_expire?.getTime() < Date.now()) {
     return next(new AppErrors({ otp: errorMessages.otp.expired }, 400));
