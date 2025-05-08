@@ -58,14 +58,18 @@ export const login = asyncWrapper(async (req, res, next) => {
   res.cookie("full_name", user.full_name, {
     maxAge: 10 * 24 * 60 * 60 * 1000,
   });
-  res.cookie("avatar", user.avatar, {
+  const avatar =
+    user.avatar ||
+    `https://avatar.iran.liara.run/username?username=${user?.full_name}&background=1c1f2e&color=c5d0e6&length=1`;
+  res.cookie("avatar", avatar, {
     maxAge: 10 * 24 * 60 * 60 * 1000,
   });
   logger.info("User Logged in");
+
   res.status(200).json({
     token: token,
     full_name: user.full_name,
-    avatar: user.avatar,
+    avatar: avatar,
     role: user.role,
     userId: user._id,
   });
