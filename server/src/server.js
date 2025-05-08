@@ -1,4 +1,4 @@
-import app from "./app.js";
+import { server } from "./config/socket.js";
 // config
 import dbConnection from "./config/db.js";
 
@@ -7,7 +7,7 @@ import logger from "./utils/logger.js";
 
 const port = process.env.PORT || 8000;
 
-app.listen(port, async () => {
+server.listen(port, async () => {
   try {
     await dbConnection();
     logger.info(`Server is running on port ${port} 🎆`);
