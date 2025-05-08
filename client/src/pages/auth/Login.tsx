@@ -70,9 +70,11 @@ const Login = () => {
         Cookies.set("token", response.data.token);
         Cookies.set("avatar", response.data.avatar);
         Cookies.set("full_name", response.data.full_name);
+        Cookies.set("role", response.data.role);
         setUser({
           full_name: response.data.full_name,
           avatar: response.data.avatar,
+          role: response.data.role,
         });
         navigate("/home");
         toast.success("Successfully loged in");
