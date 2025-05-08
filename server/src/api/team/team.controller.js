@@ -102,6 +102,7 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
       : rawStatus === false || rawStatus === "false"
       ? false
       : null;
+  console.log(status, "status");
   if (status === null) {
     return next(new AppErrors("Status must be true or false", 400));
   }
@@ -122,7 +123,7 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
   }
 
   // step 1 find team
-  if (filterData.status) {
+  if (status) {
     const team = await Team.findByIdAndUpdate(
       teamId,
       {
