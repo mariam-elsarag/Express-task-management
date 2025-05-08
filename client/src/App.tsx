@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 
@@ -12,6 +12,10 @@ const Otp = lazy(() => import("./pages/auth/Otp"));
 const Forget_Password = lazy(() => import("./pages/auth/Forget_Password"));
 const Reset_Password = lazy(() => import("./pages/auth/Reset_Password"));
 
+// auth
+const Home = lazy(() => import("./pages/home/Home"));
+const Project = lazy(() => import("./pages/project/Project"));
+
 const App = () => {
   const { token } = useAuth();
 
@@ -19,7 +23,10 @@ const App = () => {
     <Suspense>
       <Routes location={location} key={location.pathname}>
         {token ? (
-          <Route path="/" element={<App_Layout />}></Route>
+          <Route path="/" element={<App_Layout />}>
+            <Route index element={<Home />} />
+            <Route path="project" element={<Project />} />
+          </Route>
         ) : (
           <Route path="/" element={<Auth_Layout />}>
             <Route index element={<Login />} />
