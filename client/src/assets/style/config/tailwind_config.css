@@ -46,4 +46,7 @@
   .main_gap {
     @apply flex flex-col gap-5;
   }
+  .main_page {
+    @apply bg-white rounded-xl p-6 h-full;
+  }
 }

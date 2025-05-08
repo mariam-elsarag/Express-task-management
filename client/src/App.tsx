@@ -18,6 +18,9 @@ const Reset_Password = lazy(() => import("./pages/auth/Reset_Password"));
 // auth
 const Home = lazy(() => import("./pages/home/Home"));
 const Project = lazy(() => import("./pages/project/Project"));
+const Notification_Page = lazy(
+  () => import("./pages/notification/Notification")
+);
 
 const App = () => {
   const { token } = useAuth();
@@ -29,6 +32,7 @@ const App = () => {
           <Route path="/" element={<App_Layout />}>
             <Route index element={<Home />} />
             <Route path="project" element={<Project />} />
+            <Route path="notification" element={<Notification_Page />} />
             <Route path="*" element={<Not_Found_Page />} />
           </Route>
         ) : (
