@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Page_Header from "../../components/header/Page_Header";
+import Page_Header from "../../components/ui/header/Page_Header";
 
 const Page_Not_Found = () => {
   return (
