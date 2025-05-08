@@ -6,13 +6,14 @@ interface buttonPropsType {
   children: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   to?: string;
-  type?: "primary" | "error";
+  type?: "primary" | "error" | "outline";
   buttonType?: "button" | "submit" | "reset";
   disabled?: boolean;
   loading?: boolean;
   className?: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   round?: "lg" | "full";
+  size?: "lg" | "sm";
 }
 
 const Button: React.FC<buttonPropsType> = ({
@@ -26,14 +27,20 @@ const Button: React.FC<buttonPropsType> = ({
   className,
   target,
   round = "lg",
+  size = "lg",
 }) => {
   const radious = {
     lg: "rounded-lg",
     full: "rounded-full",
   };
-  const base = ` ${radious[round]} outline-none  w-full  font-normal text-base flex items-center justify-center gap-2 h-[48px] px-4  transation-all ease-in-out duration-300 cursor-pointer`;
+  const sizes = {
+    lg: "h-[48px] text-base ",
+    sm: "h-[38px] text-sm ",
+  };
+  const base = ` ${radious[round]} ${sizes[size]} outline-none  w-full  font-normal  flex items-center justify-center gap-2  px-4  transation-all ease-in-out duration-300 cursor-pointer`;
   const styles = {
     primary: `${base} border-primary-500 bg-primary-500 text-white hover:bg-primary-700 `,
+    outline: `${base} border border-grey-200 text-grey-300 hover:bg-grey-50 `,
     error: `${base} bg-error-800 text-white`,
   };
   if (to)
