@@ -53,3 +53,40 @@ export const readNotification = asyncWrapper(async (req, res, next) => {
     .status(200)
     .json({ message: "Successfully read notification", read: true });
 });
+
+// read all notification
+export const markAllAsRead = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const result = await Notification.updateMany(
+    { user },
+    {
+      $set: { read: true },
+    }
+  );
+  res.status(200).json({ message: "Notifications marked as read" });
+});
+
+// delete all notification
+export const deleteAllNotification = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  await Notification.deleteMany({ user });
+  res.status(204).send();
+});
+
+// delete notification
+export const deleteNotification = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const { id } = req.params;
+
+  const notification = await Notification.findOneAndDelete({ _id: id, user });
+  if (!notification) {
+    return next(
+      new AppErrors(
+        "Notification not found or you do not have permission to delete it",
+        404
+      )
+    );
+  }
+
+  res.status(204).send();
+});
