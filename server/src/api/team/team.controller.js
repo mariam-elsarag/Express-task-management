@@ -6,6 +6,7 @@ import Team from "./team.model.js";
 import Notification from "../notification/notifcation.model.js";
 import logger from "../../utils/logger.js";
 import Invitation from "./invitation.model.js";
+import { connectedUsers, io } from "../../config/socket.js";
 
 export const createTeam = asyncWrapper(async (req, res, next) => {
   const user = req.user;
@@ -45,6 +46,20 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
     invited_by: user._id,
   });
   logger.info("Successfully invite team member");
+  // notify users via socket
+  filterData.members.forEach(({ user: memberId }) => {
+    const socketId = connectedUsers[memberId];
+    console.log(connectedUsers, "connect");
+    if (socketId) {
+      logger.info("Send via socket");
+      io.to(socketId).emit("notification", {
+        type: "invitation",
+        message: `You have been invited to join ${team.name}`,
+        teamId: team._id,
+        is_invited: true,
+      });
+    }
+  });
   // a- invited via notification
   try {
     await Promise.all(
@@ -52,7 +67,7 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
         await Notification.create({
           user: item?.user,
           type: "invitation",
-          message: `${user.full_name} invited to join ${team.name}`,
+          message: `You have been invited to join ${team.name}`,
           type_id: team._id,
           is_invited: true,
         });
