@@ -32,9 +32,18 @@
   --color-secondary-100: #dfe1f3;
 
   --color-body: #fafafa;
+
+  /* break poinst */
+  --breakpoint-xs: 500px;
 }
 @layer base {
   .flex_center_y {
     @apply flex items-center;
+  }
+  .flex_center {
+    @apply flex items-center justify-center;
+  }
+  .main_gap {
+    @apply flex flex-col gap-5;
   }
 }
