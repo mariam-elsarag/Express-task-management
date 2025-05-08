@@ -593,3 +593,47 @@ export const BurgerIcon: React.FC<iconType> = ({
     </svg>
   );
 };
+export const NotificationWithLine: React.FC<iconType> = ({
+  width = "20",
+  height = "20",
+  fill = "var(--color-grey-300)",
+}) => {
+  return (
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 25"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M13.0201 1.90991C9.71009 1.90991 7.02009 4.59991 7.02009 7.90991V10.7999C7.02009 11.4099 6.76009 12.3399 6.45009 12.8599L5.30009 14.7699C4.59009 15.9499 5.08009 17.2599 6.38009 17.6999C10.6901 19.1399 15.3401 19.1399 19.6501 17.6999C20.8601 17.2999 21.3901 15.8699 20.7301 14.7699L19.5801 12.8599C19.2801 12.3399 19.0201 11.4099 19.0201 10.7999V7.90991C19.0201 4.60991 16.3201 1.90991 13.0201 1.90991Z"
+        stroke={fill}
+        stroke-width="1.5"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+      />
+      <path
+        d="M14.8699 2.19994C14.5599 2.10994 14.2399 2.03994 13.9099 1.99994C12.9499 1.87994 12.0299 1.94994 11.1699 2.19994C11.4599 1.45994 12.1799 0.939941 13.0199 0.939941C13.8599 0.939941 14.5799 1.45994 14.8699 2.19994Z"
+        stroke={fill}
+        stroke-width="1.5"
+        stroke-miterlimit="10"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M16.02 18.0601C16.02 19.7101 14.67 21.0601 13.02 21.0601C12.2 21.0601 11.44 20.7201 10.9 20.1801C10.36 19.6401 10.02 18.8801 10.02 18.0601"
+        stroke={fill}
+        stroke-width="1.5"
+        stroke-miterlimit="10"
+      />
+      <path
+        d="M20.0299 3.47998L4.17993 19.33"
+        stroke={fill}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
