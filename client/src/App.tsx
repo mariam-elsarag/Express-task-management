@@ -5,6 +5,9 @@ import { useAuth } from "./context/AuthContext";
 const Auth_Layout = lazy(() => import("./layout/Auth_Layout"));
 const App_Layout = lazy(() => import("./layout/App_Layout"));
 
+// 404
+const Not_Found_Page = lazy(() => import("./pages/404/Page_Not_Found"));
+
 // auth
 const Login = lazy(() => import("./pages/auth/Login"));
 const Register = lazy(() => import("./pages/auth/Register"));
@@ -26,6 +29,7 @@ const App = () => {
           <Route path="/" element={<App_Layout />}>
             <Route index element={<Home />} />
             <Route path="project" element={<Project />} />
+            <Route path="*" element={<Not_Found_Page />} />
           </Route>
         ) : (
           <Route path="/" element={<Auth_Layout />}>
