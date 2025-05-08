@@ -21,7 +21,7 @@ export const extractHeader = (req) => {
   return null;
 };
 
-const verifyToken = async (token) => {
+export const verifyToken = async (token) => {
   // check if this my token
   const decode = jwt.verify(token, process.env.JWT_SECRET_KEY);
   if (!decode) {
