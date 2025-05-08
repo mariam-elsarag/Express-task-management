@@ -10,19 +10,19 @@ const errorMessages = {
     validation_error: "Invalid OTP: must be 6 digits.",
     expired: "OTP is expired",
     invalid: "Invalid OTP",
-    reset_message:
-      "If the email and OTP are valid, your password will be reset.",
-    activate_message:
-      "If the email and OTP are valid, your account will be activated.",
+
+    otp_required_message: "Please request a verification code to continue.",
+    activate_message: "Successfully activated account",
+    reset_message: "OTP verified successfully",
   },
   activate_account:
     "Your account is not activated yet. Please check your email to verify your account before proceeding.",
   email_required: "Email is required",
   email_not_found: "User with",
-  forger_password_message:
-    "If an account with this email exists, you will receive instructions to reset your password.",
+  forget_password_message:
+    "Instructions to reset your password have been sent successfully.",
   activate_account_message:
-    "If an account with this email exists and is not activated, you will receive instructions to activate your account.",
+    "Instructions to activate your account have been sent successfully.",
   invalid_email: "Please enter a valid email ex:example@gmail.com",
   invalid_full_name:
     "Full name must be at least 2 characters long and contain only letters.",
