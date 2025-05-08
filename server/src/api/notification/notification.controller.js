@@ -57,7 +57,7 @@ export const readNotification = asyncWrapper(async (req, res, next) => {
 // read all notification
 export const markAllAsRead = asyncWrapper(async (req, res, next) => {
   const user = req.user._id;
-  const result = await Notification.updateMany(
+  await Notification.updateMany(
     { user },
     {
       $set: { read: true },
