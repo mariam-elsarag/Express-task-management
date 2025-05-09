@@ -4,6 +4,7 @@ import {
   DashboardIcon,
   FolderIcon,
   GearIcon,
+  InvitationIcon,
   LogoutIcon,
   TaskIcon,
   UsersIcon,
@@ -35,7 +36,7 @@ const Sidebar: React.FC<sidebarType> = ({ openSidebar, setOpenSidebar }) => {
       path: "project",
       icon: <FolderIcon fill="var(--color-grey-200)" />,
     },
-    {
+    user.role !== "user" && {
       id: 2,
       title: "Task",
       path: "task",
@@ -49,6 +50,12 @@ const Sidebar: React.FC<sidebarType> = ({ openSidebar, setOpenSidebar }) => {
     },
     {
       id: 4,
+      title: "Invitations",
+      path: "invitation",
+      icon: <InvitationIcon fill="var(--color-grey-200)" />,
+    },
+    {
+      id: 5,
       title: "Settings",
       path: "setting",
       icon: <GearIcon fill="var(--color-grey-200)" />,

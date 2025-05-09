@@ -4,6 +4,7 @@ import {
   DashboardIcon,
   FolderIcon,
   GearIcon,
+  InvitationIcon,
   NotFoundIcon,
   NotificationIcon,
   TaskIcon,
@@ -31,6 +32,8 @@ const Page_Header = ({ page }) => {
         return { title: "Teams", icon: <UsersIcon /> };
       case "profile":
         return { title: "profile", icon: <UserIcon /> };
+      case "invitation":
+        return { title: "Invitation", icon: <InvitationIcon /> };
       case "notification":
         return { title: "Notification", icon: null };
 
