@@ -13,7 +13,7 @@ import { Tooltip } from "react-tooltip";
 import Modal from "../../components/modal/Modal";
 import Confirmation from "../../components/modal/Confirmation";
 
-const Notification = () => {
+const Notification_Page = () => {
   const { setHasNotification, hasNotification } = useOutletContext();
   const { data, handleScroll, setData } =
     usePaginatedData("/api/notification/");
@@ -24,9 +24,17 @@ const Notification = () => {
   const { socket } = useAuth();
   useEffect(() => {
     if (!socket) return;
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
     const handleNotification = (notification: any) => {
       setData((prev) => [notification, ...prev]);
       setHasNotification(true);
+      if (Notification.permission === "granted") {
+        new Notification(notification.message, {
+          body: notification.message,
+        });
+      }
     };
     socket.on("notification", handleNotification);
 
@@ -34,6 +42,9 @@ const Notification = () => {
       socket.off("notification", handleNotification);
     };
   }, [socket]);
+  useEffect(() => {
+    setHasNotification(false);
+  }, []);
   const handleMarkAllAsRead = async () => {
     try {
       const response = await axiosInstance.delete("/api/notification/");
@@ -50,6 +61,7 @@ const Notification = () => {
       const response = await axiosInstance.delete("/api/notification/");
       if (response.status === 204) {
         setData([]);
+        setToggleDeleteModal(false);
       }
     } catch (err) {
       toast.error(err.response.data.errors);
@@ -179,6 +191,7 @@ const Notificatin_Item = ({ setData, item }) => {
               notification.notification_id !== item?.notification_id
           )
         );
+        setToggleDeleteModal(false);
       }
     } catch (err) {
       toast.error(err.response.data.errors);
@@ -262,4 +275,4 @@ const Notificatin_Item = ({ setData, item }) => {
     </>
   );
 };
-export default Notification;
+export default Notification_Page;
