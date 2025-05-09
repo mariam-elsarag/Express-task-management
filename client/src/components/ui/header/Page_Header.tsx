@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BurgerIcon,
   DashboardIcon,
@@ -12,8 +12,10 @@ import {
   UsersIcon,
 } from "../../../assets/icons/Icon";
 import { Link, useOutletContext } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
 
 const Page_Header = ({ page }) => {
+  const { socket } = useAuth();
   const { setOpenSidebar, hasNotification, setHasNotification } =
     useOutletContext();
 
@@ -49,6 +51,26 @@ const Page_Header = ({ page }) => {
     }
   };
   const { title, icon } = headerTitle();
+
+  useEffect(() => {
+    if (!socket) return;
+    if (Notification.permission !== "granted") {
+      Notification.requestPermission();
+    }
+    const handleNotification = (notification: any) => {
+      setHasNotification(true);
+      if (Notification.permission === "granted") {
+        new Notification(notification.message, {
+          body: notification.message,
+        });
+      }
+    };
+    socket.on("notification", handleNotification);
+
+    return () => {
+      socket.off("notification", handleNotification);
+    };
+  }, [socket]);
   return (
     <header className="bg-white rounded-xl px-4 py-5 main_shadow flex_center_y gap-4 justify-between">
       {/* right (icon and page title) */}

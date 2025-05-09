@@ -5,12 +5,11 @@ import usePaginatedData from "../../hooks/usePaginatedData";
 import Button from "../../components/ui/button/Button";
 import { useAuth } from "../../context/AuthContext";
 import { useOutletContext } from "react-router-dom";
-import { handleError } from "../../utils/handleErrors";
 import { toast } from "react-toastify";
 import axiosInstance from "../../servicses/axiosInstance";
 import { EyeOn, NotificationWithDot, TrashIcon } from "../../assets/icons/Icon";
 import { Tooltip } from "react-tooltip";
-import Modal from "../../components/modal/Modal";
+
 import Confirmation from "../../components/modal/Confirmation";
 
 const Notification_Page = () => {
@@ -22,19 +21,12 @@ const Notification_Page = () => {
   const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
 
   const { socket } = useAuth();
+
   useEffect(() => {
     if (!socket) return;
-    if (Notification.permission !== "granted") {
-      Notification.requestPermission();
-    }
+
     const handleNotification = (notification: any) => {
       setData((prev) => [notification, ...prev]);
-      setHasNotification(true);
-      if (Notification.permission === "granted") {
-        new Notification(notification.message, {
-          body: notification.message,
-        });
-      }
     };
     socket.on("notification", handleNotification);
 
@@ -73,7 +65,7 @@ const Notification_Page = () => {
   return (
     <section className="main_gap">
       <Page_Header page="notification" />
-      <div className="main_page min-h-[80dvh]">
+      <div className="main_page ">
         {data?.length === 0 ? (
           <Empty page="notification" />
         ) : (
@@ -205,7 +197,7 @@ const Notificatin_Item = ({ setData, item }) => {
       <div
         className={`${
           item?.read ? "" : "bg-gray-50 rounded-lg"
-        } p-4  flex items-start justify-between gap-2 border-b border-grey-100 `}
+        } py-6 px-4 sm:p-6  flex items-start justify-between gap-2 main_shadow `}
       >
         <div className="flex flex-col gap-2">
           <p className={`${item?.read ? "text-grey-200" : "text-grey-300"}`}>
@@ -249,7 +241,7 @@ const Notificatin_Item = ({ setData, item }) => {
               }
             }}
             className={`${
-              item.read ? "hidden" : "flex_center"
+              item.read ? "hidden" : "flex_center cursor-pointer "
             } w-6 h-6 border border-grey-200 rounded-lg`}
           >
             <EyeOn width="15" height="15" fill="var(--color-grey-300)" />

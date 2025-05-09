@@ -23,13 +23,7 @@ const Notification_Page = lazy(
 );
 
 // invitation
-const Invitation_Container = lazy(() => import("./pages/invitation/Index"));
-const Invitation_List = lazy(
-  () => import("./pages/invitation/Invitation_List")
-);
-const Invitation_Creation = lazy(
-  () => import("./pages/invitation/Invitation_Create")
-);
+const Invitation = lazy(() => import("./pages/invitation/Invitation"));
 
 const App = () => {
   const { token, user } = useAuth();
@@ -42,11 +36,7 @@ const App = () => {
             <Route index element={<Home />} />
             <Route path="project" element={<Project />} />
             <Route path="notification" element={<Notification_Page />} />
-            <Route path="invitation" element={<Invitation_Container />}>
-              <Route index element={<Invitation_List />} />
-              {user.role !== "user"}
-              {<Route path="create" element={<Invitation_Creation />} />}
-            </Route>
+            <Route path="invitation" element={<Invitation />} />
 
             <Route path="*" element={<Not_Found_Page />} />
           </Route>

@@ -1,5 +1,8 @@
 import React, { ReactNode } from "react";
-import { NotificationWithLine } from "../../../assets/icons/Icon";
+import {
+  InvitationIcon,
+  NotificationWithLine,
+} from "../../../assets/icons/Icon";
 
 interface EmptyType {
   page: string;
@@ -13,6 +16,17 @@ const Empty: React.FC<EmptyType> = ({ page = "" }) => {
           message: "No notification yet",
           icon: (
             <NotificationWithLine
+              fill="var(--color-grey-200)"
+              width="60"
+              height="60"
+            />
+          ),
+        };
+      case "invitation":
+        return {
+          message: "No Invitation yet",
+          icon: (
+            <InvitationIcon
               fill="var(--color-grey-200)"
               width="60"
               height="60"

@@ -3,16 +3,18 @@ import multer from "multer";
 
 // middleware
 import { authorized, protect } from "../../middlewares/auth.middleware.js";
+import { createTeam, inviteMemberToTeam } from "./team.controller.js";
+
 import {
-  createTeam,
-  inviteMemberToTeam,
+  InvitationList,
   updateInvitationStatus,
-} from "./team.controller.js";
+} from "./invitation/invitation.controller.js";
 
 const router = express.Router();
 const upload = multer();
 
 router.use(protect());
+router.route("/invite").get(authorized("user"), InvitationList);
 // routes for usr
 router
   .route("/:id/invite")

@@ -60,6 +60,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
     }
   }, [token]);
+
   return (
     <AuthContext.Provider
       value={{
