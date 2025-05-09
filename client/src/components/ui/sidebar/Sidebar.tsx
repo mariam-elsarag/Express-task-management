@@ -96,17 +96,17 @@ const Sidebar: React.FC<sidebarType> = ({ openSidebar, setOpenSidebar }) => {
             )}
           </ul>
           <footer className=" nav_footer flex flex-col gap-3">
-            <div
-              onClick={logout}
-              className="flex_center_y gap-2  px-3 rounded-lg cursor-pointer"
+            <Link
+              to="/profile"
+              className="flex_center_y gap-2 py-2 text-grey-300 px-3 rounded-lg cursor-pointer"
               role="button"
             >
               <img
                 src={user.avatar}
                 className="w-6 h-6 rounded-full object-cover border border-grey-200"
               />
-              <span className="text-grey-300 truncate ">{user.full_name}</span>
-            </div>
+              <span className=" truncate ">{user.full_name}</span>
+            </Link>
             <div
               onClick={logout}
               className="flex_center_y gap-3  px-3 rounded-lg cursor-pointer"

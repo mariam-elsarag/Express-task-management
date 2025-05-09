@@ -13,7 +13,7 @@ interface buttonPropsType {
   className?: string;
   target?: "_blank" | "_self" | "_parent" | "_top";
   round?: "lg" | "full";
-  size?: "lg" | "sm";
+  size?: "lg" | "md" | "sm";
 }
 
 const Button: React.FC<buttonPropsType> = ({
@@ -36,12 +36,17 @@ const Button: React.FC<buttonPropsType> = ({
   const sizes = {
     lg: "h-[48px] text-base ",
     sm: "h-[38px] text-sm ",
+    md: "h-[40px] text-sm ",
   };
-  const base = ` ${radious[round]} ${sizes[size]} outline-none  w-full  font-normal  flex items-center justify-center gap-2  px-4  transation-all ease-in-out duration-300 cursor-pointer`;
+  const base = ` ${radious[round]} ${
+    sizes[size]
+  } outline-none  w-full  font-normal  flex items-center justify-center gap-2  px-4  transation-all ease-in-out duration-300 ${
+    disabled || loading ? "cursor-not-allowed" : "cursor-pointer"
+  }`;
   const styles = {
     primary: `${base} border-primary-500 bg-primary-500 text-white hover:bg-primary-700 `,
     outline: `${base} border border-grey-200 text-grey-300 hover:bg-grey-50 `,
-    error: `${base} bg-error-800 text-white`,
+    error: `${base} bg-error-700 hover:bg-error-600 text-white`,
   };
   if (to)
     return (

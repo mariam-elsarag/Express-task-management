@@ -10,11 +10,17 @@ import { toast } from "react-toastify";
 import axiosInstance from "../../servicses/axiosInstance";
 import { EyeOn, NotificationWithDot, TrashIcon } from "../../assets/icons/Icon";
 import { Tooltip } from "react-tooltip";
+import Modal from "../../components/modal/Modal";
+import Confirmation from "../../components/modal/Confirmation";
 
 const Notification = () => {
   const { setHasNotification, hasNotification } = useOutletContext();
   const { data, handleScroll, setData } =
     usePaginatedData("/api/notification/");
+  // for delete all notification
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
+
   const { socket } = useAuth();
   useEffect(() => {
     if (!socket) return;
@@ -36,6 +42,20 @@ const Notification = () => {
       }
     } catch (err) {
       toast.error(err.response.data.errors);
+    }
+  };
+  const handleDeleteAllNotification = async () => {
+    try {
+      setLoadingDelete(true);
+      const response = await axiosInstance.delete("/api/notification/");
+      if (response.status === 204) {
+        setData([]);
+      }
+    } catch (err) {
+      toast.error(err.response.data.errors);
+      console.log("Error while deleteing all notification");
+    } finally {
+      setLoadingDelete(false);
     }
   };
   return (
@@ -64,6 +84,7 @@ const Notification = () => {
                 className="flex_center  cursor-pointer w-8 h-8 border border-grey-100 rounded-lg "
                 data-tooltip-id={`deleteAllNotification`}
                 data-tooltip-content="Delete all"
+                onClick={() => setToggleDeleteModal(true)}
               >
                 <TrashIcon
                   fill="var(--color-error-600)"
@@ -83,12 +104,26 @@ const Notification = () => {
           </section>
         )}
       </div>
+      <Confirmation
+        open={toggleDeleteModal}
+        onClose={() => {
+          setToggleDeleteModal(false);
+        }}
+        className="!w-[450px]"
+        message="Are you sure you want delete all notification?"
+        loading={loadingDelete}
+        handleClick={handleDeleteAllNotification}
+      />
     </section>
   );
 };
 const Notificatin_Item = ({ setData, item }) => {
   const [loader, setLoader] = useState(false);
   const [status, setStatus] = useState<boolean>(false);
+  // for delete  notification
+  const [loadingDelete, setLoadingDelete] = useState(false);
+  const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
+
   const updateInvitation = async (data) => {
     try {
       setLoader(true);
@@ -131,64 +166,100 @@ const Notificatin_Item = ({ setData, item }) => {
       toast.error(err.response.data.errors);
     }
   };
+  const handleDeleteNotification = async () => {
+    try {
+      setLoadingDelete(true);
+      const response = await axiosInstance.delete(
+        `/api/notification/${item?.notification_id}`
+      );
+      if (response.status === 204) {
+        setData((pre) =>
+          pre.filter(
+            (notification) =>
+              notification.notification_id !== item?.notification_id
+          )
+        );
+      }
+    } catch (err) {
+      toast.error(err.response.data.errors);
+      console.log("Error while deleteing all notification");
+    } finally {
+      setLoadingDelete(false);
+    }
+  };
   return (
-    <div
-      className={`${
-        item?.read ? "" : "bg-gray-50 rounded-lg"
-      } p-4  flex items-start justify-between gap-2 border-b border-grey-100 `}
-    >
-      <div className="flex flex-col gap-2">
-        <p className={`${item?.read ? "text-grey-200" : "text-grey-300"}`}>
-          {item?.message}
-        </p>
-        {item?.is_invited && (
-          <div className="flex_center_y gap-2">
-            <Button
-              onClick={() => {
-                setStatus(true);
-                updateInvitation({ status: true });
-              }}
-              loading={loader && status === true}
-              disabled={loader && status === false}
-              className="max-w-[100px]"
-              size="sm"
-            >
-              Accept{" "}
-            </Button>
-            <Button
-              onClick={() => {
-                setStatus(false);
-                updateInvitation({ status: "false" });
-              }}
-              loading={loader && status === false}
-              disabled={loader && status === true}
-              className="max-w-[100px]"
-              size="sm"
-              type="outline"
-            >
-              cancel
-            </Button>
-          </div>
-        )}
+    <>
+      <div
+        className={`${
+          item?.read ? "" : "bg-gray-50 rounded-lg"
+        } p-4  flex items-start justify-between gap-2 border-b border-grey-100 `}
+      >
+        <div className="flex flex-col gap-2">
+          <p className={`${item?.read ? "text-grey-200" : "text-grey-300"}`}>
+            {item?.message}
+          </p>
+          {item?.is_invited && (
+            <div className="flex_center_y gap-2">
+              <Button
+                onClick={() => {
+                  setStatus(true);
+                  updateInvitation({ status: true });
+                }}
+                loading={loader && status === true}
+                disabled={loader && status === false}
+                className="max-w-[100px]"
+                size="sm"
+              >
+                Accept{" "}
+              </Button>
+              <Button
+                onClick={() => {
+                  setStatus(false);
+                  updateInvitation({ status: "false" });
+                }}
+                loading={loader && status === false}
+                disabled={loader && status === true}
+                className="max-w-[100px]"
+                size="sm"
+                type="outline"
+              >
+                cancel
+              </Button>
+            </div>
+          )}
+        </div>
+        <div className="flex_center_y gap-2">
+          <span
+            onClick={() => {
+              if (!item.read) {
+                handleReadNotifcation();
+              }
+            }}
+            className={`${
+              item.read ? "hidden" : "flex_center"
+            } w-6 h-6 border border-grey-200 rounded-lg`}
+          >
+            <EyeOn width="15" height="15" fill="var(--color-grey-300)" />
+          </span>
+          <span
+            onClick={() => setToggleDeleteModal(true)}
+            className="flex_center cursor-pointer w-6 h-6 border border-error-600 rounded-lg"
+          >
+            <TrashIcon width="15" height="15" fill="var(--color-error-600)" />
+          </span>
+        </div>
       </div>
-      <div className="flex_center_y gap-2">
-        <span
-          onClick={() => {
-            if (!item.read) {
-              handleReadNotifcation();
-            }
-          }}
-          className={`${
-            item.read ? "hidden" : "flex_center"
-          } w-6 h-6 border border-grey-200 rounded-lg`}
-        >
-          <EyeOn width="15" height="15" fill="var(--color-grey-300)" />
-        </span>
-        <span className="flex_center cursor-pointer w-6 h-6 border border-error-600 rounded-lg">
-          <TrashIcon width="15" height="15" fill="var(--color-error-600)" />
-        </span>
-      </div>
-    </div>
+      <Confirmation
+        open={toggleDeleteModal}
+        onClose={() => {
+          setToggleDeleteModal(false);
+        }}
+        className="!w-[450px]"
+        message="Are you sure you want delete this notification?"
+        loading={loadingDelete}
+        handleClick={handleDeleteNotification}
+      />
+    </>
   );
 };
 export default Notification;

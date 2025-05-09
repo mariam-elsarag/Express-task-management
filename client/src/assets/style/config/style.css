@@ -164,4 +164,77 @@ body {
 
 .react-tooltip-arrow {
   display: none !important;
+}
+
+.p-dialog-content {
+  padding: 10px 24px 30px;
+  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 16px;
+}
+@media (max-width: 600px) {
+  .p-dialog-content {
+    padding: 10px 16px 16px;
+  }
+}
+
+.p-dialog-header {
+  padding: 10px;
+}
+.p-dialog-header svg {
+  color: var(--color-grey-300);
+  outline: none !important;
+}
+
+.modal_hide_header .p-dialog-header {
+  padding: 5px 10px;
+  border-top-right-radius: 16px;
+  border-top-left-radius: 16px;
+}
+@media (max-width: 600px) {
+  .modal_hide_header .p-dialog-header {
+    padding: 7px 10px;
+  }
+}
+.modal_hide_header .p-dialog-header-icons button {
+  display: none;
+}
+
+.p-dialog-mask {
+  -webkit-backdrop-filter: blur(2px);
+          backdrop-filter: blur(2px);
+}
+
+.p-dialog-header-icons button {
+  outline: none;
+  box-shadow: none;
+}
+.p-dialog-header-icons button:hover {
+  background: transparent !important;
+}
+
+.no_padding .p-dialog-content {
+  padding: 0 !important;
+}
+
+.hide_header .p-dialog-header {
+  padding: 12px !important;
+}
+.hide_header .p-dialog-header-icons {
+  display: none;
+}
+
+.clanedar_modal.p-dialog {
+  border-radius: 16px !important;
+  -webkit-border-radius: 16px !important;
+  -moz-border-radius: 16px !important;
+  -ms-border-radius: 16px !important;
+  -o-border-radius: 16px !important;
+}
+.clanedar_modal .p-dialog-content {
+  border-bottom-right-radius: 16px !important;
+  border-bottom-left-radius: 16px !important;
+}
+.clanedar_modal .p-dialog-header {
+  border-top-right-radius: 16px !important;
+  border-top-left-radius: 16px !important;
 }/*# sourceMappingURL=style.css.map */
