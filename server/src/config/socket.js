@@ -35,7 +35,6 @@ const connectedUsers = {};
 // handle connection
 io.on("connection", (socket) => {
   const userId = socket.user._id;
-  console.log(userId, "test");
   connectedUsers[userId] = socket.id;
   logger.info("user connect to socket");
 

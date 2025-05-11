@@ -8,6 +8,9 @@ import AppErrors from "../../../utils/appErrors.js";
 import asyncWrapper from "../../../utils/asyncWrapper.js";
 import serializeBody from "../../../utils/serizlizeBody.js";
 
+// config
+import { connectedUsers, io } from "../../../config/socket.js";
+
 // invitation list
 export const InvitationList = asyncWrapper(async (req, res, next) => {
   const user = req.user;
@@ -58,7 +61,6 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
       : rawStatus === false || rawStatus === "false"
       ? false
       : null;
-
   if (status === null) {
     return next(new AppErrors("Status must be true or false", 400));
   }
@@ -66,7 +68,8 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
   const user = await Invitation.findOne({
     team: teamId,
     "invited_users.user": userId,
-  });
+  }).populate({ path: "invited_users.user", select: "_id full_name" });
+
   if (!user) {
     return next(new AppErrors("You are not invited to this team", 404));
   }
@@ -78,14 +81,14 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
     return next(new AppErrors("You are not invited to this team", 403));
   }
 
-  // step 1 find team
   if (status) {
+    // step 1 find team
     const team = await Team.findByIdAndUpdate(
       teamId,
       {
         $push: {
           members: {
-            user: invitedUser.user,
+            user: invitedUser.user._id,
             role: invitedUser.role,
           },
         },
@@ -95,6 +98,22 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
 
     if (!team) {
       return next(new AppErrors("Team no longer exists", 400));
+    }
+    // send notifcation to team creator that this person accept invitation
+    await Notification.create({
+      user: user.invited_by,
+      type: "invitation_acceptance",
+      message: `${invitedUser.user.full_name} accepted your invitation to join your team`,
+      type_id: team._id,
+    });
+    // send it via socket
+    const socketId = connectedUsers[user.invited_by];
+    if (socketId) {
+      io.to(socketId).emit("notification", {
+        type: "invitation_acceptance",
+        message: `${invitedUser.user.full_name} accepted your invitation to join your team`,
+        type_id: team._id,
+      });
     }
   }
   logger.info("after add member to team");
@@ -125,9 +144,8 @@ export const updateInvitationStatus = asyncWrapper(async (req, res, next) => {
   if (updatedInvitation && updatedInvitation.invited_users.length === 0) {
     await Invitation.deleteOne({ team: teamId });
   }
-  const message =
-    filterData.status == "true"
-      ? "Successfully accept invitation"
-      : "Successfully reject invitation";
+  const message = filterData.status
+    ? "Successfully accept invitation"
+    : "Successfully reject invitation";
   res.status(200).json({ message });
 });

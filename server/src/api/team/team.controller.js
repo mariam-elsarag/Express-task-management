@@ -93,10 +93,3 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
     team,
   });
 });
-
-// invite member to team
-export const inviteMemberToTeam = asyncWrapper(async (req, res, next) => {
-  const user = req.user._id;
-  const required = ["invited_users", "team"];
-  res.status(200).json({ test: "k" });
-});
