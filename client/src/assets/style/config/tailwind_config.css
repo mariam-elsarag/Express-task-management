@@ -35,6 +35,7 @@
 
   /* break poinst */
   --breakpoint-xs: 500px;
+  --font-sans: "Plus Jakarta Sans", "sans-serif";
 }
 @layer base {
   .flex_center_y {

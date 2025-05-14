@@ -1,0 +1,40 @@
+.p-datatable {
+  .p-datatable-thead {
+    tr {
+      th {
+        background-color: var(--color-primary-50) !important;
+        color: var(--color-grey-300);
+        font-family: var(--font-sans) !important;
+        font-weight: 400;
+        font-size: 14px;
+        padding: 12px;
+        text-wrap: nowrap;
+        &:first-of-type {
+          border-top-left-radius: 8px;
+          border-bottom-left-radius: 8px;
+        }
+        &:last-of-type {
+          border-top-right-radius: 8px;
+          border-bottom-right-radius: 8px;
+        }
+      }
+    }
+  }
+  .p-datatable-tbody {
+    tr {
+      color: var(--color-grey-300) !important;
+      font-family: var(--font-sans) !important;
+      font-weight: 400;
+      font-size: 14px;
+
+      td {
+        text-align: start !important;
+        text-wrap: nowrap !important;
+        padding: 20px !important;
+      }
+      &:nth-of-type(even) {
+        background-color: var(--color-neutral-50);
+      }
+    }
+  }
+}

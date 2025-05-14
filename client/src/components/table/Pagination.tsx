@@ -41,7 +41,7 @@ const Pagination: React.FC<PaginationProps> = ({
   };
 
   return (
-    <ul className={`flex_center gap-1 ${className}`}>
+    <ul className={`flex_center flex-row-reverse gap-1 ${className}`}>
       {/* Next Arrow (rotated) */}
       <li
         className={`center w-5 h-5 sm:w-6 sm:h-6 ${
@@ -101,7 +101,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
       {/* Previous Arrow */}
       <li
-        className={`center w-5 h-5 sm:w-6 sm:h-6 ${
+        className={`flex_center rotate-180 w-5 h-5 sm:w-6 sm:h-6 ${
           currentPage > 1 ? "cursor-pointer" : "cursor-default"
         }`}
         onClick={onPrevious}

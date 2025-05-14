@@ -100,7 +100,7 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
 export const getAllUsers = asyncWrapper(async (req, res, next) => {
   const user = req.user._id;
   const feature = new ApiFeature(User.find({ _id: { $ne: user } }), req.query)
-    .paginate(10)
+    .paginate(5)
     .search(["full_name", "email"]);
   const users = await feature.getPaginations(User, req);
   if (users.results?.length > 0) {

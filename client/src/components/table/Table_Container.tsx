@@ -1,5 +1,7 @@
 import React from "react";
 import Table from "./Table";
+import Pagination from "./Pagination";
+import Search from "./Search";
 
 interface columnsInterface {
   field?: string;
@@ -12,6 +14,8 @@ interface tableContainerInterface {
   onPageChange: (page: number) => void;
   totalCount: number;
   currentPage: number;
+  query: object;
+  setQuery: () => void;
 }
 const Table_Container: React.FC<tableContainerInterface> = ({
   columns,
@@ -20,10 +24,18 @@ const Table_Container: React.FC<tableContainerInterface> = ({
   onPageChange,
   totalCount,
   currentPage = 1,
+  query,
+  setQuery,
 }) => {
   return (
-    <div>
+    <div className="grid gap-2">
+      <Search query={query} setQuery={setQuery} />
       <Table columns={columns} data={data} loading={loading} />
+      <Pagination
+        onPageChange={onPageChange}
+        totalCount={totalCount}
+        currentPage={currentPage}
+      />
     </div>
   );
 };
