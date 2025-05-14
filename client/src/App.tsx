@@ -17,6 +17,11 @@ const Reset_Password = lazy(() => import("./pages/auth/Reset_Password"));
 
 // auth
 const Home = lazy(() => import("./pages/home/Home"));
+// Team
+const Teams_Container = lazy(() => import("./pages/team/Index"));
+const Teams_Details = lazy(() => import("./pages/team/Team_Details"));
+const Team = lazy(() => import("./pages/team/Team"));
+
 const Project = lazy(() => import("./pages/project/Project"));
 const Notification_Page = lazy(
   () => import("./pages/notification/Notification")
@@ -37,6 +42,10 @@ const App = () => {
             <Route path="project" element={<Project />} />
             <Route path="notification" element={<Notification_Page />} />
             <Route path="invitation" element={<Invitation />} />
+            <Route path="teams" element={<Teams_Container />}>
+              <Route index element={<Team />} />
+              <Route path="details" element={<Teams_Details />} />
+            </Route>
 
             <Route path="*" element={<Not_Found_Page />} />
           </Route>

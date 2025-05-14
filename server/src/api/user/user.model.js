@@ -63,6 +63,11 @@ userSchema.pre("save", function (next) {
   }
   next();
 });
+userSchema.pre("save", async function (next) {
+  if (this.avatar) return next();
+  this.avatar = `https://avatar.iran.liara.run/username?username=${this.full_name}&background=1c1f2e&color=c5d0e6&length=1`;
+  next();
+});
 // hash password
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
@@ -84,10 +89,7 @@ userSchema.methods.isPasswordChangedAfterJwt = function (jwtTimestamp) {
     return false;
   }
 
-  return (
-    Math.floor(new Date(this.password_change_at).getTime() / 1000) >
-    jwtTimestamp
-  );
+  return Math.floor(new Date(this.password_change_at).getTime()) > jwtTimestamp;
 };
 
 // generate otp

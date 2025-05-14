@@ -17,10 +17,12 @@ class ApiFeature {
   search(fields = []) {
     const queryStr = this.queryString.search;
     if (queryStr === "" || !fields || fields.length === 0) return this;
-    const regex = new RegExp(queryStr, "gi");
+    const regex = new RegExp(queryStr, "i");
+
     this.query = this.query.find({
       $or: fields.map((field) => ({ [field]: { $regex: regex } })),
     });
+
     return this;
   }
   sort(sortingString) {

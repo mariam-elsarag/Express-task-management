@@ -30,7 +30,7 @@ const Page_Header = ({ page }) => {
         return { title: "Task", icon: <TaskIcon /> };
       case "project":
         return { title: "Project", icon: <FolderIcon /> };
-      case "teams":
+      case "team":
         return { title: "Teams", icon: <UsersIcon /> };
       case "profile":
         return { title: "profile", icon: <UserIcon /> };

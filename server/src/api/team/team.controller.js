@@ -7,6 +7,8 @@ import Notification from "../notification/notifcation.model.js";
 import logger from "../../utils/logger.js";
 import Invitation from "./invitation/invitation.model.js";
 import { connectedUsers, io } from "../../config/socket.js";
+import ApiFeature from "../../utils/apiFeatures.js";
+import User from "../user/user.model.js";
 
 export const createTeam = asyncWrapper(async (req, res, next) => {
   const user = req.user;
@@ -92,4 +94,21 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
     message: "Team created and invitations sent successfully to team members.",
     team,
   });
+});
+
+// get all users
+export const getAllUsers = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const feature = new ApiFeature(User.find({ _id: { $ne: user } }), req.query)
+    .paginate(10)
+    .search(["full_name", "email"]);
+  const users = await feature.getPaginations(User, req);
+  if (users.results?.length > 0) {
+    users.results = users.results?.map((item) => ({
+      userId: item?._id,
+      full_name: item?.full_name,
+      avatar: item.avatar,
+    }));
+  }
+  res.status(200).json(users);
 });

@@ -3,10 +3,11 @@ import Password from "./Password";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { InputOtp } from "primereact/inputotp";
+import Input_Checkbox from "./Input_Checkbox";
 interface FormItemType {
   id?: string;
-  formType?: "input" | "textarea" | "password";
-  fieldName?: string | undefined;
+  formType?: "input" | "textarea" | "password" | "checkbox" | "otp";
+  fieldName: string | undefined;
   validator?: any;
   label?: string;
   placeholder?: string;
@@ -15,8 +16,11 @@ interface FormItemType {
   className?: string;
   groupWith?: number;
   isGrouped?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
   icon?: React.ReactNode;
   style?: string;
+  title?: string;
 }
 
 interface FormProps {
@@ -100,6 +104,19 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             integerOnly
             className="otp"
             length={6}
+          />
+        );
+      case "checkbox":
+        return (
+          <Input_Checkbox
+            value={field?.value}
+            onChange={(e) => {
+              field.onChange(e.value);
+            }}
+            disabled={item?.disabled || loading || false}
+            title={item?.title || ""}
+            id={item?.id || ""}
+            errors={error}
           />
         );
       case "textarea":

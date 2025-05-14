@@ -2,6 +2,7 @@ import React, { ReactNode } from "react";
 import {
   InvitationIcon,
   NotificationWithLine,
+  UsersIcon,
 } from "../../../assets/icons/Icon";
 
 interface EmptyType {
@@ -31,6 +32,13 @@ const Empty: React.FC<EmptyType> = ({ page = "" }) => {
               width="60"
               height="60"
             />
+          ),
+        };
+      case "teams":
+        return {
+          message: "No teams yet",
+          icon: (
+            <UsersIcon fill="var(--color-grey-200)" width="60" height="60" />
           ),
         };
 

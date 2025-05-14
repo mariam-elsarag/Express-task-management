@@ -14,6 +14,7 @@ interface buttonPropsType {
   target?: "_blank" | "_self" | "_parent" | "_top";
   round?: "lg" | "full";
   size?: "lg" | "md" | "sm";
+  hasFullWidth?: boolean;
 }
 
 const Button: React.FC<buttonPropsType> = ({
@@ -28,6 +29,7 @@ const Button: React.FC<buttonPropsType> = ({
   target,
   round = "lg",
   size = "lg",
+  hasFullWidth = true,
 }) => {
   const radious = {
     lg: "rounded-lg",
@@ -38,9 +40,9 @@ const Button: React.FC<buttonPropsType> = ({
     sm: "h-[38px] text-sm ",
     md: "h-[40px] text-sm ",
   };
-  const base = ` ${radious[round]} ${
-    sizes[size]
-  } outline-none  w-full  font-normal  flex items-center justify-center gap-2  px-4  transation-all ease-in-out duration-300 ${
+  const base = ` ${radious[round]} ${sizes[size]} outline-none  ${
+    hasFullWidth ? "w-full" : "w-fit"
+  }   font-normal  flex items-center justify-center gap-2  px-4  transation-all ease-in-out duration-300 ${
     disabled || loading ? "cursor-not-allowed" : "cursor-pointer"
   }`;
   const styles = {

@@ -45,7 +45,7 @@ const Sidebar: React.FC<sidebarType> = ({ openSidebar, setOpenSidebar }) => {
     user.role !== "user" && {
       id: 3,
       title: "Teams",
-      path: "team",
+      path: "teams",
       icon: <UsersIcon fill="var(--color-grey-200)" />,
     },
     user.role === "user" && {
