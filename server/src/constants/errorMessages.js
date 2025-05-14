@@ -35,8 +35,7 @@ const errorMessages = {
   server_error: "Something went wrong. Please try again later.",
   project: {
     name: "Project name is required",
-    user: "User is required",
-    role: "Select user role ['owner', 'manager', 'contributor']",
+    team: "Team is required",
     start_date: "Start date is required",
     end_date: "End date is required",
     createdBy: "Created by is required",

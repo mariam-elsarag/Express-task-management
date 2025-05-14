@@ -9,21 +9,9 @@ const invitationsSchema = new mongoose.Schema(
     },
     invited_users: [
       {
-        user: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "User",
-          required: [true, "User is required"],
-        },
-        role: {
-          type: String,
-          enum: ["leader", "member", "viewer"],
-          default: "member",
-        },
-        status: {
-          type: String,
-          enum: ["pending", "accepted", "rejected"],
-          default: "pending",
-        },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+        required: [true, "User is required"],
       },
     ],
     invited_by: {

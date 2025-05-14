@@ -138,7 +138,7 @@ export const sendOtp = asyncWrapper(async (req, res, next) => {
   if (!emailPattern.test(email)) {
     return next(new AppErrors(errorMessages.invalid_email, 400));
   }
-  // check if this email exist
+
   // check if this email exist
   const user = await User.findOne({ email });
   if (!user) {
@@ -146,11 +146,11 @@ export const sendOtp = asyncWrapper(async (req, res, next) => {
   }
   logger.info("generat and send  email");
 
-  if (!user.is_active) {
+  if (is_forget == "true" && !user.is_active) {
     return next(new AppErrors(errorMessages.activate_account, 403));
   }
   // generate otp
-  const otp = await user.generateOtp(user);
+  const otp = await user.generateOtp(user, 2);
   const resetLink = `${process.env.FRONT_SERVER}/otp?email=${email}&is_forget=${
     is_forget ? true : false
   }`;
@@ -220,7 +220,7 @@ export const verifyOtp = asyncWrapper(async (req, res, next) => {
   if (user?.otp_expire?.getTime() < Date.now()) {
     return next(new AppErrors({ otp: errorMessages.otp.expired }, 400));
   }
-
+  console.log(filterData.otp, user.otp_code, "k");
   // check if it's valid
   if (!(await user.compareOtp(filterData.otp, user.otp_code))) {
     return next(new AppErrors({ otp: errorMessages.otp.invalid }, 400));

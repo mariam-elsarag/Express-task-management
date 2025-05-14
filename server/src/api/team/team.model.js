@@ -18,8 +18,14 @@ const teamSchema = new mongoose.Schema(
           enum: ["leader", "member"],
           default: "member",
         },
+        status: {
+          type: String,
+          enum: ["pending", "accepted", "rejected"],
+          default: "pending",
+        },
       },
     ],
+    projects: [{ type: mongoose.Schema.Types.ObjectId, ref: "Project" }],
     created_by: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

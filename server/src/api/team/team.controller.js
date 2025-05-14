@@ -35,18 +35,20 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
   // create team
   const team = await Team.create({
     name: filterData.name,
+    members: filterData.members?.map(({ user, role }) => ({
+      user,
+      role,
+    })),
     created_by: user._id,
   });
   logger.info("Successfully create team");
   // invite member
   await Invitation.create({
     team: team._id,
-    invited_users: filterData.members?.map(({ user, role }) => ({
-      user,
-      role,
-    })),
+    invited_users: filterData.members?.map(({ user }) => user),
     invited_by: user._id,
   });
+
   logger.info("Successfully invite team member");
   // notify users via socket
   filterData.members.forEach(({ user: memberId }) => {
@@ -65,6 +67,14 @@ export const createTeam = asyncWrapper(async (req, res, next) => {
       io.to(socketId).emit("invitation:new", {
         invitation_id: team._id,
         team: team.name,
+        date: new Date(Date.now()).toLocaleString("en", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        }),
         invited_by: {
           full_name: user.full_name,
           avatar: user.avatar,
@@ -108,6 +118,38 @@ export const getAllUsers = asyncWrapper(async (req, res, next) => {
       userId: item?._id,
       full_name: item?.full_name,
       avatar: item.avatar,
+    }));
+  }
+  res.status(200).json(users);
+});
+
+// get team list
+export const getAllTeams = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const feature = new ApiFeature(
+    Team.find({ created_by: user }).populate({
+      path: "members.user",
+      select: "_id avatar full_name",
+    }),
+    req.query
+  )
+    .paginate(5)
+    .search(["name"]);
+  const users = await feature.getPaginations(User, req);
+
+  if (users.results?.length > 0) {
+    users.results = users.results?.map((item) => ({
+      teamId: item._id,
+      team_name: item.name,
+      members: item.members.filter(
+        (m) =>
+          m.status === "accepted" && {
+            avatar: m.user.avatar,
+            userId: m.user._id,
+            full_name: m.user.full_name,
+          }
+      ),
+      porjects: item.Projects || [],
     }));
   }
   res.status(200).json(users);

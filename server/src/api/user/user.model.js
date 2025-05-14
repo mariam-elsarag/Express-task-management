@@ -98,6 +98,7 @@ userSchema.methods.generateOtp = async function (user, expire = 10) {
   const hashOtp = await bcrypt.hash(otpcode, 12);
   user.otp_expire = Date.now() + expire * 60 * 1000;
   user.otp_code = hashOtp;
+
   return otpcode;
 };
 

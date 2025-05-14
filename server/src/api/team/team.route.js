@@ -3,7 +3,7 @@ import multer from "multer";
 
 // middleware
 import { authorized, protect } from "../../middlewares/auth.middleware.js";
-import { createTeam, getAllUsers } from "./team.controller.js";
+import { createTeam, getAllTeams, getAllUsers } from "./team.controller.js";
 
 import {
   InvitationList,
@@ -22,7 +22,7 @@ router
 
 // for route only manager and admin
 router.use(authorized("admin", "manager"));
-router.route("/").post(upload.none(), createTeam);
+router.route("/").post(upload.none(), createTeam).get(getAllTeams);
 router.route("/user").get(getAllUsers);
 
 export default router;

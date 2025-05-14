@@ -11,6 +11,7 @@ const notificationSchema = new mongoose.Schema(
       enum: [
         "invitation",
         "invitation_acceptance",
+        "invitation_rejected",
         "reminder",
         "alert",
         "message",

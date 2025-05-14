@@ -24,21 +24,11 @@ const projectSchema = new mongoose.Schema(
       required: [true, errorMessages.project.createdBy],
     },
 
-    teamMembers: [
-      {
-        user: {
-          type: Schema.Types.ObjectId,
-          ref: "User",
-          required: [true, errorMessages.project.user],
-        },
-        role: {
-          type: String,
-          enum: ["owner", "manager", "contributor"],
-          default: "contributor",
-          required: [true, errorMessages.project.role],
-        },
-      },
-    ],
+    team: {
+      type: Schema.Types.ObjectId,
+      ref: "Team",
+      required: [true, errorMessages.project.team],
+    },
     start_date: {
       type: Date,
       required: [true, errorMessages.project.start_date],
