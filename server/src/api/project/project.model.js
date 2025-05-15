@@ -31,7 +31,6 @@ const projectSchema = new mongoose.Schema(
     team: {
       type: Schema.Types.ObjectId,
       ref: "Team",
-      required: [true, errorMessages.project.team],
     },
     start_date: {
       type: Date,

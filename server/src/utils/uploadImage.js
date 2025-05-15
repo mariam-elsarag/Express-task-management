@@ -1,5 +1,3 @@
-// import cloudinary from "./../config/cloudinary.js";
-// import appErrors from "./appErrors.js";
 import logger from "./logger.js";
 import AppErrors from "./appErrors.js";
 import cloudinary from "./../config/cloudinary.js";

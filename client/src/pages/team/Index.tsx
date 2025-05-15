@@ -153,7 +153,9 @@ const Index = () => {
 
   const teamFormateData = teams?.map((team) => ({
     name: <div>{team.team_name}</div>,
-    projects: <div>{team?.projects?.join(",") || "-"}</div>,
+    projects: (
+      <div> {team?.porjects?.map(({ name }) => name).join(",") || "-"}</div>
+    ),
     members: (
       <div className="flex_center_y gap-1">
         {team.members?.length > 0 ? (

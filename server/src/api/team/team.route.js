@@ -8,6 +8,7 @@ import {
   deleteTeam,
   getAllTeams,
   getAllUsers,
+  getTeamList,
 } from "./team.controller.js";
 
 import {
@@ -29,6 +30,7 @@ router
 // for route only manager and admin
 router.use(authorized("admin", "manager"));
 router.route("/").post(upload.none(), createTeam).get(getAllTeams);
+router.route("/list").get(getTeamList);
 router.route("/user").get(getAllUsers);
 router.route("/:id").delete(isMongoId, deleteTeam);
 

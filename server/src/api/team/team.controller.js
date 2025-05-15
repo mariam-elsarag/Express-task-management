@@ -137,10 +137,13 @@ export const getAllUsers = asyncWrapper(async (req, res, next) => {
 export const getAllTeams = asyncWrapper(async (req, res, next) => {
   const user = req.user._id;
   const feature = new ApiFeature(
-    Team.find({ created_by: user }).populate({
-      path: "members.user",
-      select: "_id avatar full_name",
-    }),
+    Team.find({ created_by: user }).populate([
+      {
+        path: "members.user",
+        select: "_id avatar full_name",
+      },
+      { path: "projects", select: "name _id" },
+    ]),
     req.query
   )
     .paginate(5)
@@ -159,10 +162,21 @@ export const getAllTeams = asyncWrapper(async (req, res, next) => {
             full_name: m.user.full_name,
           }
       ),
-      porjects: item.Projects || [],
+      porjects: item.projects || [],
     }));
   }
   res.status(200).json(users);
+});
+// get team list without pagination
+export const getTeamList = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const teams = await Team.find({ created_by: user });
+
+  let teamData =
+    teams.length > 0
+      ? teams?.map((item) => ({ name: item.name, teamId: item._Id }))
+      : [];
+  res.status(200).json(teamData);
 });
 
 // delete teams

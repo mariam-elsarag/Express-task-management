@@ -40,6 +40,8 @@ const errorMessages = {
     end_date: "End date is required",
     createdBy: "Created by is required",
     invalidDateRange: "End date must be later than start date.",
+    date: "Invalid date",
+    not_found: "Project not found",
   },
   task: {
     priority: "Select priority of task (high, medium, low)",
