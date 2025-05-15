@@ -3,12 +3,18 @@ import multer from "multer";
 
 // middleware
 import { authorized, protect } from "../../middlewares/auth.middleware.js";
-import { createTeam, getAllTeams, getAllUsers } from "./team.controller.js";
+import {
+  createTeam,
+  deleteTeam,
+  getAllTeams,
+  getAllUsers,
+} from "./team.controller.js";
 
 import {
   InvitationList,
   updateInvitationStatus,
 } from "./invitation/invitation.controller.js";
+import { isMongoId } from "../../validation/isMongoId.validate.js";
 
 const router = express.Router();
 const upload = multer();
@@ -24,5 +30,6 @@ router
 router.use(authorized("admin", "manager"));
 router.route("/").post(upload.none(), createTeam).get(getAllTeams);
 router.route("/user").get(getAllUsers);
+router.route("/:id").delete(isMongoId, deleteTeam);
 
 export default router;

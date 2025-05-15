@@ -3,9 +3,14 @@ import { SearchIcon } from "../../assets/icons/Icon";
 interface SearchInterface {
   query: Record<string, any>;
   setQuery: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  noSearchWithEnter?: boolean;
 }
 
-const Search: React.FC<SearchInterface> = ({ query, setQuery }) => {
+const Search: React.FC<SearchInterface> = ({
+  query,
+  setQuery,
+  noSearchWithEnter = false,
+}) => {
   const [searchText, setSearchText] = useState<string>("");
 
   const diabledSearch =
@@ -35,7 +40,7 @@ const Search: React.FC<SearchInterface> = ({ query, setQuery }) => {
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" && !noSearchWithEnter) {
             handleSearch();
           }
         }}

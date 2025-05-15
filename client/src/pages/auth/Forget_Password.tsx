@@ -14,6 +14,7 @@ const Forget_Password = () => {
   const title = location.pathname.includes("forget-password")
     ? "Forget Password"
     : "Activate account";
+  const isForget = location.pathname.includes("forget-password") ? true : false;
   // ___________________ use form ____________________
   const {
     control,
@@ -49,7 +50,7 @@ const Forget_Password = () => {
     try {
       setLoading(true);
       const response = await axiosInstance.post(
-        "/api/auth/otp?is_forget=true",
+        `/api/auth/otp?is_forget=${isForget}`,
         data
       );
       if (response?.status === 200) {

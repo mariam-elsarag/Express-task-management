@@ -64,7 +64,7 @@ const Pagination: React.FC<PaginationProps> = ({
           return (
             <li
               key={`dots-${index}`}
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg center dots"
+              className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex_center dots"
             >
               {/* DOTS SVG */}
               <svg

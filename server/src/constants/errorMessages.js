@@ -46,6 +46,9 @@ const errorMessages = {
     name: "Task name is required",
     dueDate: "Due date is required",
   },
+  team: {
+    no_team: "Team not found",
+  },
   invite_team_member: {
     invitedUsers: "Invited users is required",
   },

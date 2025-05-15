@@ -7,9 +7,10 @@ import {
 
 interface EmptyType {
   page: string;
+  className?: string;
 }
 
-const Empty: React.FC<EmptyType> = ({ page = "" }) => {
+const Empty: React.FC<EmptyType> = ({ page = "", className = "" }) => {
   const handleMessage = () => {
     switch (page) {
       case "notification":
@@ -48,7 +49,7 @@ const Empty: React.FC<EmptyType> = ({ page = "" }) => {
   };
   const { message, icon } = handleMessage();
   return (
-    <div className="flex_center min-h-[70vh] flex-col gap-3">
+    <div className={`flex_center min-h-[70vh] flex-col gap-3 ${className}`}>
       {icon}
       <p className="text-grey-200 capitalize font-semibold text-lg">
         {message}

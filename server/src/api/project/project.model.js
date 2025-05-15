@@ -9,6 +9,10 @@ const projectSchema = new mongoose.Schema(
       type: String,
       required: [true, errorMessages.project.name],
     },
+    image: {
+      type: String,
+      default: "",
+    },
     description: {
       type: String,
       default: "",

@@ -1,14 +1,24 @@
 import mongoose from "mongoose";
+
+// model
+import Team from "./team.model.js";
+import User from "../user/user.model.js";
+import Invitation from "./invitation/invitation.model.js";
+import Notification from "../notification/notifcation.model.js";
+
+// utils
+import logger from "../../utils/logger.js";
 import AppErrors from "../../utils/appErrors.js";
+import ApiFeature from "../../utils/apiFeatures.js";
 import asyncWrapper from "../../utils/asyncWrapper.js";
 import serializeBody from "../../utils/serizlizeBody.js";
-import Team from "./team.model.js";
-import Notification from "../notification/notifcation.model.js";
-import logger from "../../utils/logger.js";
-import Invitation from "./invitation/invitation.model.js";
+
+// config
 import { connectedUsers, io } from "../../config/socket.js";
-import ApiFeature from "../../utils/apiFeatures.js";
-import User from "../user/user.model.js";
+
+// constant
+import errorMessages from "../../constants/errorMessages.js";
+import Project from "../project/project.model.js";
 
 export const createTeam = asyncWrapper(async (req, res, next) => {
   const user = req.user;
@@ -153,4 +163,36 @@ export const getAllTeams = asyncWrapper(async (req, res, next) => {
     }));
   }
   res.status(200).json(users);
+});
+
+// delete teams
+export const deleteTeam = asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+  const team = await Team.findOne({ _id: id });
+  if (!team) {
+    return next(new AppErrors(errorMessages.team.no_team, 404));
+  }
+  await Team.deleteOne({ _id: id });
+  // delete invitation
+  await Invitation.findOneAndDelete({ team: id });
+
+  // step 2 send socket
+
+  team.members.forEach(({ user: memberId }) => {
+    const socketId = connectedUsers[memberId];
+
+    if (socketId) {
+      logger.info("Send via socket");
+
+      // send to invitation
+      io.to(socketId).emit("invitation:delete", {
+        invitation_id: id,
+      });
+    }
+  });
+
+  // unassign team to project
+  await Project.updateMany({ team: id }, { $set: { team: null } });
+
+  res.status(204).send();
 });

@@ -59,12 +59,15 @@ const Otp = () => {
 
   //resend otp
   const reSendOTP = async () => {
-    setRemainingTime(600);
-    Cookies.set("otp_timer", 600, { expires: 1 / 1440 });
+    setRemainingTime(120);
+    Cookies.set("otp_timer", 120, { expires: 1 / 1440 });
     try {
-      const response = await axiosInstance.post("/api/auth/otp", {
-        email: email,
-      });
+      const response = await axiosInstance.post(
+        `/api/auth/otp?is_forget=${type == "active" ? false : true}`,
+        {
+          email: email,
+        }
+      );
     } catch (err) {
       handleError(err, setError, []);
     }

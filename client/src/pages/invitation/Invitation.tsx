@@ -19,7 +19,13 @@ const Invitation = () => {
     const handleInvitation = (invitation: any) => {
       setData((prev) => [...prev, invitation]);
     };
+    const handleDeleteInvitation = (invitation: any) => {
+      setData((prev) =>
+        prev.filter((item) => item.invitation_id !== invitation.invitation_id)
+      );
+    };
     socket.on("invitation:new", handleInvitation);
+    socket.on("invitation:delete", handleDeleteInvitation);
 
     return () => {
       socket.off("invitation:new", handleInvitation);

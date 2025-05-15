@@ -43,7 +43,7 @@ const Table: React.FC<tableInterface> = ({
         <DataTable
           value={data}
           tableStyle={{ width: "100%" }}
-          emptyMessage={<Empty page="teams" />}
+          emptyMessage={<Empty page="teams" className="!min-h-[40vh]" />}
         >
           {columns?.map(
             (item, index) =>
