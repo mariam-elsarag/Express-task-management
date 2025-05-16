@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import { SearchIcon } from "../../assets/icons/Icon";
 interface SearchInterface {
-  query: Record<string, any>;
-  setQuery: React.Dispatch<React.SetStateAction<Record<string, any>>>;
+  query: Record<string, undefined>;
+  setQuery: React.Dispatch<React.SetStateAction<Record<string, undefined>>>;
   noSearchWithEnter?: boolean;
+  searchPlaceHolder?: string;
 }
 
 const Search: React.FC<SearchInterface> = ({
   query,
   setQuery,
   noSearchWithEnter = false,
+  searchPlaceHolder = "",
 }) => {
   const [searchText, setSearchText] = useState<string>("");
 
@@ -36,7 +38,7 @@ const Search: React.FC<SearchInterface> = ({
       </span>
       <input
         type="text"
-        placeholder="Search"
+        placeholder={searchPlaceHolder || "Search"}
         value={searchText}
         onChange={(e) => setSearchText(e.target.value)}
         onKeyDown={(e) => {

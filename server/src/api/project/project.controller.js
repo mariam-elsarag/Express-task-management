@@ -19,6 +19,7 @@ const projectSerializer = (project) => {
     description: project.description,
     status: project.status,
     image: project.image || null,
+    progress: project.progress,
     start_date: new Date(project.start_date).toLocaleString("en", {
       day: "2-digit",
       month: "long",

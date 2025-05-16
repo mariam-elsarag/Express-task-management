@@ -13,12 +13,14 @@ interface tableInterface {
   data: [];
   loading: boolean;
   tbodyClassName?: string;
+  page?: string;
 }
 const Table: React.FC<tableInterface> = ({
   columns,
   data,
   loading,
   tbodyClassName = "",
+  page = "",
 }) => {
   return (
     <div className="overflow-x-auto">
@@ -43,7 +45,7 @@ const Table: React.FC<tableInterface> = ({
         <DataTable
           value={data}
           tableStyle={{ width: "100%" }}
-          emptyMessage={<Empty page="teams" className="!min-h-[40vh]" />}
+          emptyMessage={<Empty page={page} className="!min-h-[40vh]" />}
         >
           {columns?.map(
             (item, index) =>

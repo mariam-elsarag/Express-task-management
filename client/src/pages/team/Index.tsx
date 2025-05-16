@@ -245,6 +245,7 @@ const Index = () => {
             currentPage={teamPage}
             query={teamQuery}
             setQuery={teamSetQuery}
+            page="teams"
           />
         </div>
       </section>
@@ -271,6 +272,7 @@ const Index = () => {
               query={query}
               setQuery={setQuery}
               noSearchWithEnter={true}
+              page="teams"
               tableError={
                 errors.members && (
                   <p className="text-sm text-error-800 mt-1">

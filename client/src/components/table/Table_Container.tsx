@@ -14,10 +14,12 @@ interface tableContainerInterface {
   onPageChange: (page: number) => void;
   totalCount: number;
   currentPage: number;
-  query: object;
-  setQuery: () => void;
+  query: Record<string, undefined>;
+  setQuery: React.Dispatch<React.SetStateAction<Record<string, undefined>>>;
   tableError?: ReactNode;
   noSearchWithEnter?: boolean;
+  page?: string;
+  searchPlaceHolder?: string;
 }
 const Table_Container: React.FC<tableContainerInterface> = ({
   columns,
@@ -30,6 +32,8 @@ const Table_Container: React.FC<tableContainerInterface> = ({
   setQuery,
   tableError,
   noSearchWithEnter = false,
+  page = "",
+  searchPlaceHolder = "",
 }) => {
   return (
     <div className="grid gap-2">
@@ -37,8 +41,9 @@ const Table_Container: React.FC<tableContainerInterface> = ({
         query={query}
         setQuery={setQuery}
         noSearchWithEnter={noSearchWithEnter}
+        searchPlaceHolder={searchPlaceHolder}
       />
-      <Table columns={columns} data={data} loading={loading} />
+      <Table columns={columns} data={data} loading={loading} page={page} />
       {tableError}
       <Pagination
         onPageChange={onPageChange}
