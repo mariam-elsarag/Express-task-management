@@ -36,7 +36,7 @@ const Button: React.FC<buttonPropsType> = ({
     full: "rounded-full",
   };
   const sizes = {
-    lg: "h-[48px] text-base ",
+    lg: "h-[45px] text-sm ",
     sm: "h-[38px] text-sm ",
     md: "h-[40px] text-sm ",
   };

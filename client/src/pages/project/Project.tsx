@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Page_Header from "../../components/ui/header/Page_Header";
 import Button from "../../components/ui/button/Button";
 import usePaginatedData from "../../hooks/usePaginatedData";
 import Table_Container from "../../components/table/Table_Container";
 import Badge from "../../components/ui/badge/Badge";
 import Action from "../../components/table/Action";
+import Menu from "../../components/table/Menu";
+import { EyeOn, PenWithSquareIcon, TrashIcon } from "../../assets/icons/Icon";
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../../servicses/axiosInstance";
+import { toast } from "react-toastify";
+import { handleError } from "../../utils/handleErrors";
+import Confirmation from "../../components/modal/Confirmation";
 
 const columns = [
   { field: "name", header: "Project" },
@@ -15,6 +22,7 @@ const columns = [
   { field: "action", header: "" },
 ];
 const Project = () => {
+  const navigate = useNavigate();
   const {
     data,
     query,
@@ -25,6 +33,47 @@ const Project = () => {
     loading,
     setRefetchData,
   } = usePaginatedData("/api/project");
+  // for delete project
+  const [visibility, setVisibility] = useState(false);
+  const [deleteLoader, setDeleteLoader] = useState(false);
+  const [id, setId] = useState();
+  const handleDelete = async () => {
+    try {
+      setDeleteLoader(true);
+      const response = await axiosInstance.delete(`/api/project/${id}/delete`);
+      if (response.status === 204) {
+        toast.success("Successfully deleted");
+        setVisibility(false);
+        setRefetchData(new Date());
+      }
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setDeleteLoader(false);
+    }
+  };
+
+  const menuList = [
+    {
+      icon: <EyeOn />,
+      title: "View",
+      action: (data) => navigate(`/project/${data.projectId}/details`),
+    },
+    {
+      icon: <PenWithSquareIcon />,
+      title: "Edit",
+      action: (data) => navigate(`/project/${data.projectId}/edit`),
+    },
+    {
+      icon: <TrashIcon fill="var(--color-error-800)" />,
+      title: "Delete",
+      className: "!text-error-800",
+      action: (data) => {
+        setVisibility(true);
+        setId(data?.projectId);
+      },
+    },
+  ];
   const badgeType = (status: string): { text: string; type: string } => {
     switch (status) {
       case "planned":
@@ -46,7 +95,7 @@ const Project = () => {
     if (progress < 70) return "bg-amber-400";
     return "bg-emerald-600";
   };
-  const formatData = data?.map((item) => {
+  const formatData = data?.map((item, index) => {
     const { text, type } = badgeType(item.status);
 
     return {
@@ -79,45 +128,53 @@ const Project = () => {
       start_date: <span>{item?.start_date}</span>,
       end_date: <span>{item?.end_date}</span>,
       action: (
-        <Action
-          hasEdit={true}
-          hasView={false}
-          viewPath={`/project/${item.projectId}/edit`}
-          deleteLink={`/api/project/${item.projectId}`}
-          confirmPopupMessage={`Are you sure you want to delete "${item.name}"?`}
-          refetchFn={() => {
-            setRefetchData(Date.now());
-          }}
+        <Menu
+          data={item}
+          list={menuList}
+          isFirstElement={index === 0}
+          isLastElement={data?.length - 1 === index}
         />
       ),
     };
   });
 
   return (
-    <div className="main_page flex flex-col gap-10 ">
-      <header className="flex_center_y justify-end">
-        <Button
-          to="/project/create"
-          hasFullWidth={false}
-          className="md:min-w-[200px]"
-        >
-          Add Project
-        </Button>
-      </header>
+    <>
+      <div className="main_page flex flex-col gap-10 ">
+        <header className="flex_center_y justify-end">
+          <Button
+            to="/project/create"
+            hasFullWidth={false}
+            className="md:min-w-[200px]"
+          >
+            Add Project
+          </Button>
+        </header>
 
-      <Table_Container
-        columns={columns}
-        data={formatData}
+        <Table_Container
+          columns={columns}
+          data={formatData}
+          loading={loading}
+          onPageChange={handlePagination}
+          totalCount={pages}
+          currentPage={page}
+          query={query}
+          setQuery={setQuery}
+          page="project"
+          searchPlaceHolder="Search with project name"
+        />
+      </div>
+      <Confirmation
+        open={visibility}
+        onClose={() => {
+          setVisibility(false);
+        }}
+        className="!w-[450px]"
         loading={loading}
-        onPageChange={handlePagination}
-        totalCount={pages}
-        currentPage={page}
-        query={query}
-        setQuery={setQuery}
-        page="project"
-        searchPlaceHolder="Search with project name"
+        message="Are you sure you want to delete project?"
+        handleClick={handleDelete}
       />
-    </div>
+    </>
   );
 };
 
