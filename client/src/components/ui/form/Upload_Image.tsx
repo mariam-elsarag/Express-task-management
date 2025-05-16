@@ -25,7 +25,7 @@ const Upload_Image: React.FC<UploadImageProps> = ({
   loading,
   disabled,
 }) => {
-  const [img, setImg] = useState<string | null>(value || null);
+  const [img, setImg] = useState<string | null>(value);
 
   const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

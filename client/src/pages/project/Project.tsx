@@ -82,7 +82,7 @@ const Project = () => {
         <Action
           hasEdit={true}
           hasView={false}
-          viewPath={`/project/${item.porjectId}/edit`}
+          viewPath={`/project/${item.projectId}/edit`}
           deleteLink={`/api/project/${item.projectId}`}
           confirmPopupMessage={`Are you sure you want to delete "${item.name}"?`}
           refetchFn={() => {

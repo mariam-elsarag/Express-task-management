@@ -20,6 +20,7 @@ const projectSerializer = (project) => {
     status: project.status,
     image: project.image || null,
     progress: project.progress,
+    team: project.team,
     start_date: new Date(project.start_date).toLocaleString("en", {
       day: "2-digit",
       month: "long",
@@ -155,4 +156,16 @@ export const getProjects = asyncWrapper(async (req, res, next) => {
     projects.results = projects.results.map((item) => projectSerializer(item));
   }
   res.status(200).json(projects);
+});
+
+// get project details
+export const getProjectDetails = asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+
+  const project = await Project.findOne({ _id: id });
+  if (!project) {
+    return next(new AppErrors(errorMessages.project.not_found, 404));
+  }
+
+  res.status(200).json(projectSerializer(project));
 });

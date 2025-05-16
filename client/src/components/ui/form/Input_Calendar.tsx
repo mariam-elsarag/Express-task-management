@@ -43,7 +43,7 @@ const Input_Calendar: React.FC<CalendarProps> = ({
 
       <Calendar
         ref={calendarRef}
-        value={value}
+        value={typeof value === "string" ? new Date(value) : value}
         inputId={id}
         onChange={(e) => handleChange(e)}
         placeholder={placeholder}

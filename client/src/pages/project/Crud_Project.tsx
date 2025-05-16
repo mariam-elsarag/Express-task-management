@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import Form from "../../components/ui/form/Form";
@@ -8,6 +8,8 @@ import { handleError } from "../../utils/handleErrors";
 import axiosInstance from "../../servicses/axiosInstance";
 import { toast } from "react-toastify";
 import { dirtyFieldsOnly } from "../../utils/dirtyFields";
+
+import Spinner from "../../components/ui/Spinner";
 
 const statusList = [
   { name: "Planned", value: "planned" },
@@ -20,6 +22,8 @@ const Crud_Project = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(false);
+
   const isEdit = location.pathname.includes("edit") ? true : false;
 
   const { data: teams } = useGetData("/api/team/list");
@@ -137,6 +141,27 @@ const Crud_Project = () => {
     },
   ];
 
+  // ______________________ get data ________________
+  const getData = async () => {
+    try {
+      setLoadingData(true);
+      const respose = await axiosInstance.get(`/api/project/${id}`);
+      const data = respose.data;
+
+      Object.keys(data).forEach((key) => {
+        setValue(key, data[key]);
+      });
+    } catch (err) {
+      handleError(err);
+    } finally {
+      setLoadingData(false);
+    }
+  };
+  useEffect(() => {
+    if (isEdit) {
+      getData();
+    }
+  }, []);
   // ______________________ submit ________________
   const onSubmit = async (data: Record<string, any>) => {
     try {
@@ -167,7 +192,13 @@ const Crud_Project = () => {
       setLoading(false);
     }
   };
-
+  if (loading) {
+    return (
+      <div className=" flex_center h-[50vh]">
+        <Spinner className="!w-6 !h-6" />;
+      </div>
+    );
+  }
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
