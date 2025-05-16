@@ -1,0 +1,34 @@
+.p-calendar {
+  &:not(.p-calendar-disabled).p-focus > .p-inputtext {
+    box-shadow: none !important;
+    border: 1px solid var(--color-gray-500);
+  }
+}
+.p-datepicker:not(.p-disabled)
+  table
+  td
+  span:not(.p-highlight):not(.p-disabled):focus {
+  // box-shadow: 0 0 0 1px var(--primary);
+  box-shadow: none !important;
+}
+.p-datepicker table td.p-datepicker-today > span {
+  border: 1px solid var(--color-primary-500);
+  background-color: #fff;
+  color: var(--color-primary-500);
+}
+.p-inputtext {
+  box-shadow: none !important;
+
+  border: 1px solid var(--color-gray-100);
+
+  font-size: 14px;
+
+  &::placeholder {
+    color: #979899;
+  }
+}
+.p-datepicker table td > span.p-highlight,
+.p-datepicker table td > span:hover {
+  background-color: var(--color-primary-50);
+  color: var(--color-primary-500);
+}

@@ -80,7 +80,9 @@ const Project = () => {
       end_date: <span>{item?.end_date}</span>,
       action: (
         <Action
-          viewPath={`/project/${item.porjectId}/details`}
+          hasEdit={true}
+          hasView={false}
+          viewPath={`/project/${item.porjectId}/edit`}
           deleteLink={`/api/project/${item.projectId}`}
           confirmPopupMessage={`Are you sure you want to delete "${item.name}"?`}
           refetchFn={() => {
@@ -92,33 +94,30 @@ const Project = () => {
   });
 
   return (
-    <section className="main_gap">
-      <Page_Header page="project" />
-      <div className="main_page flex flex-col gap-10 ">
-        <header className="flex_center_y justify-end">
-          <Button
-            // onClick={() => setVisible(true)}
-            hasFullWidth={false}
-            className="md:min-w-[200px]"
-          >
-            Add Project
-          </Button>
-        </header>
+    <div className="main_page flex flex-col gap-10 ">
+      <header className="flex_center_y justify-end">
+        <Button
+          to="/project/create"
+          hasFullWidth={false}
+          className="md:min-w-[200px]"
+        >
+          Add Project
+        </Button>
+      </header>
 
-        <Table_Container
-          columns={columns}
-          data={formatData}
-          loading={loading}
-          onPageChange={handlePagination}
-          totalCount={pages}
-          currentPage={page}
-          query={query}
-          setQuery={setQuery}
-          page="project"
-          searchPlaceHolder="Search with project name"
-        />
-      </div>
-    </section>
+      <Table_Container
+        columns={columns}
+        data={formatData}
+        loading={loading}
+        onPageChange={handlePagination}
+        totalCount={pages}
+        currentPage={page}
+        query={query}
+        setQuery={setQuery}
+        page="project"
+        searchPlaceHolder="Search with project name"
+      />
+    </div>
   );
 };
 

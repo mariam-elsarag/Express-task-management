@@ -50,4 +50,7 @@
   .main_page {
     @apply bg-white rounded-xl p-6 min-h-[81dvh] h-full;
   }
+  .inner_page {
+    @apply rounded-lg py-6 px-4;
+  }
 }

@@ -3,10 +3,11 @@ import Password from "./Password";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { InputOtp } from "primereact/inputotp";
+import Input_Calendar from "./Input_Calendar";
 
 interface FormItemType {
   id?: string;
-  formType?: "input" | "textarea" | "password" | "otp";
+  formType?: "input" | "textarea" | "password" | "otp" | "calendar";
   fieldName: string | undefined;
   validator?: any;
   label?: string;
@@ -106,7 +107,18 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             length={6}
           />
         );
-
+      case "calendar":
+        return (
+          <Input_Calendar
+            id={item.id || 0}
+            value={field.value || ""}
+            handleChange={field.onChange}
+            placeholder={item.placeholder || ""}
+            loading={loading}
+            disabled={item?.disabled}
+            error={errors[item?.fieldName] || error}
+          />
+        );
       case "textarea":
         return (
           <div
@@ -116,7 +128,7 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
                 : isFocused
                 ? "border-gray-500"
                 : " border-grey-100"
-            } flex items-center gap-2 border px-3 py-3  h-[48px] ${
+            } flex items-center gap-2 border px-3 py-3  ${
               item?.style ? item?.style : "rounded-lg"
             }  `}
           >
@@ -126,7 +138,7 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
               name={item.name || ""}
               value={field.value ?? ""}
               onChange={field.onChange}
-              className={`outline-0 shadow-none  resize-none !h-auto !min-h-[100px] `}
+              className={`flex-1 outline-0 shadow-none  resize-none !h-auto !min-h-[100px] `}
               placeholder={item.placeholder}
               onFocus={() => setFocusedField(item?.id)}
               onBlur={() => setFocusedField(null)}
@@ -147,7 +159,7 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             <div className={`  ${item?.className} `} key={item.id}>
               {[item, formList[index + 1]].map((fieldItem) => (
                 <fieldset
-                  className={`flex flex-col gap-2  text-base capitalize `}
+                  className={`flex flex-col  gap-2  text-base capitalize `}
                   key={fieldItem.id}
                 >
                   <label

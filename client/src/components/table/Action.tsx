@@ -4,11 +4,12 @@ import { toast } from "react-toastify";
 import { handleError } from "../../utils/handleErrors";
 
 import { Link } from "react-router-dom";
-import { EyeOn, TrashIcon } from "../../assets/icons/Icon";
+import { EyeOn, PenWithSquareIcon, TrashIcon } from "../../assets/icons/Icon";
 import Confirmation from "../modal/Confirmation";
 
 interface actionInterface {
   hasView?: boolean;
+  hasEdit?: boolean;
   hasDelete?: boolean;
   disabled?: boolean;
   viewPath?: string;
@@ -20,6 +21,7 @@ interface actionInterface {
 
 const Action: React.FC<actionInterface> = ({
   hasView = true,
+  hasEdit = false,
   hasDelete = true,
   disabled = false,
   viewPath,
@@ -57,6 +59,14 @@ const Action: React.FC<actionInterface> = ({
             className="flex_center w-6 h-6 rounded-sm border  border-grey-100 cursor-pointer "
           >
             <EyeOn width="18" height="18" />
+          </Link>
+        )}
+        {hasEdit && (
+          <Link
+            to={viewPath}
+            className="flex_center w-6 h-6 rounded-sm border  border-grey-100 cursor-pointer "
+          >
+            <PenWithSquareIcon width="18" height="18" />
           </Link>
         )}
         {hasDelete && (

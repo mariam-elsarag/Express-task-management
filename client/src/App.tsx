@@ -22,7 +22,10 @@ const Teams_Container = lazy(() => import("./pages/team/Index"));
 const Teams_Details = lazy(() => import("./pages/team/Team_Details"));
 const Team = lazy(() => import("./pages/team/Team"));
 
+const Project_Container = lazy(() => import("./pages/project/Index"));
 const Project = lazy(() => import("./pages/project/Project"));
+
+const Project_Crud = lazy(() => import("./pages/project/Crud_Project"));
 const Notification_Page = lazy(
   () => import("./pages/notification/Notification")
 );
@@ -39,7 +42,12 @@ const App = () => {
         {token ? (
           <Route path="/" element={<App_Layout />}>
             <Route index element={<Home />} />
-            <Route path="project" element={<Project />} />
+            <Route path="project" element={<Project_Container />}>
+              <Route index element={<Project />} />
+
+              <Route path="create" element={<Project_Crud />} />
+              <Route path=":id/edit" element={<Project_Crud />} />
+            </Route>
             <Route path="notification" element={<Notification_Page />} />
             <Route path="invitation" element={<Invitation />} />
             <Route path="teams" element={<Teams_Container />}>

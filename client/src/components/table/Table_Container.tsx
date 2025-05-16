@@ -3,25 +3,29 @@ import Table from "./Table";
 import Pagination from "./Pagination";
 import Search from "./Search";
 
-interface columnsInterface {
+interface ColumnInterface {
   field?: string;
   header?: string;
 }
-interface tableContainerInterface {
-  columns: [columnsInterface];
-  data: [];
+
+interface TableContainerProps {
+  columns: ColumnInterface[];
+  data: any[];
   loading: boolean;
   onPageChange: (page: number) => void;
   totalCount: number;
   currentPage: number;
-  query: Record<string, undefined>;
-  setQuery: React.Dispatch<React.SetStateAction<Record<string, undefined>>>;
+  query: Record<string, string | number | undefined>;
+  setQuery: React.Dispatch<
+    React.SetStateAction<Record<string, string | number | undefined>>
+  >;
   tableError?: ReactNode;
   noSearchWithEnter?: boolean;
   page?: string;
   searchPlaceHolder?: string;
 }
-const Table_Container: React.FC<tableContainerInterface> = ({
+
+const Table_Container: React.FC<TableContainerProps> = ({
   columns,
   data,
   loading,
