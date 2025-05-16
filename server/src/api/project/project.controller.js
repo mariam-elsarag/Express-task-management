@@ -11,6 +11,7 @@ import { isValidDate } from "../../validation/isValidDate.validate.js";
 import Team from "../team/team.model.js";
 import { projectValidation } from "../../validation/project.validator.js";
 import ApiFeature from "../../utils/apiFeatures.js";
+import task from "./../tasks/task.model.js";
 
 const projectSerializer = (project) => {
   return {
@@ -168,4 +169,17 @@ export const getProjectDetails = asyncWrapper(async (req, res, next) => {
   }
 
   res.status(200).json(projectSerializer(project));
+});
+
+// delete project
+export const deleteProject = asyncWrapper(async (req, res, next) => {
+  const { id } = req.params;
+  const user = req.user._id;
+
+  const project = await Project.findOneAndDelete({ _id: id, created_by: user });
+  if (!project) {
+    return next(new AppErrors(errorMessages.project.not_found, 400));
+  }
+  await task.deleteMany({ project_id: id });
+  res.status(204).send();
 });

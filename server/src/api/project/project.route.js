@@ -7,6 +7,7 @@ import { authorized, protect } from "../../middlewares/auth.middleware.js";
 // controller
 import {
   createProject,
+  deleteProject,
   getProjectDetails,
   getProjects,
   updateProject,
@@ -24,6 +25,7 @@ router.route("/").post(upload.single("image"), createProject).get(getProjects);
 router
   .route("/:id")
   .patch(isMongoId, upload.single("image"), updateProject)
-  .get(isMongoId, getProjectDetails);
+  .get(isMongoId, getProjectDetails)
+  .delete(isMongoId, deleteProject);
 
 export default router;

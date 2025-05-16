@@ -4,7 +4,7 @@ import errorMessages from "../../constants/errorMessages.js";
 const taskSchema = new mongoose.Schema(
   {
     project_id: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
     },
     name: {
@@ -29,7 +29,7 @@ const taskSchema = new mongoose.Schema(
       default: "todo",
     },
     assignedTo: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
     priority: {
@@ -42,7 +42,7 @@ const taskSchema = new mongoose.Schema(
       required: [true, errorMessages.task.dueDate],
     },
     created_by: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: [true, errorMessages.project.createdBy],
     },

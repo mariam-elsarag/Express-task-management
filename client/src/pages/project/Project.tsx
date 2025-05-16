@@ -40,9 +40,9 @@ const Project = () => {
   const handleDelete = async () => {
     try {
       setDeleteLoader(true);
-      const response = await axiosInstance.delete(`/api/project/${id}/delete`);
+      const response = await axiosInstance.delete(`/api/project/${id}`);
       if (response.status === 204) {
-        toast.success("Successfully deleted");
+        toast.success("Successfully delete project");
         setVisibility(false);
         setRefetchData(new Date());
       }
@@ -170,7 +170,7 @@ const Project = () => {
           setVisibility(false);
         }}
         className="!w-[450px]"
-        loading={loading}
+        loading={deleteLoader}
         message="Are you sure you want to delete project?"
         handleClick={handleDelete}
       />
