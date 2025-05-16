@@ -1,6 +1,6 @@
 .p-dropdown-label {
   font-size: 14px;
-  font-family: "IBM Plex Sans", sans-serif;
+  font-family: var(--font-sans);
 }
 
 .p-placeholder {
@@ -17,6 +17,9 @@
 
   .p-dropdown-trigger svg path {
     fill: var(--color-grey-300);
+  }
+  .p-inputtext {
+    box-shadow: none !important;
   }
 }
 

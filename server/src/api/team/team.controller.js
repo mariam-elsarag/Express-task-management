@@ -174,7 +174,7 @@ export const getTeamList = asyncWrapper(async (req, res, next) => {
 
   let teamData =
     teams.length > 0
-      ? teams?.map((item) => ({ name: item.name, teamId: item._Id }))
+      ? teams?.map((item) => ({ name: item.name, teamId: item._id }))
       : [];
   res.status(200).json(teamData);
 });

@@ -4,11 +4,20 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { InputOtp } from "primereact/inputotp";
 import Input_Calendar from "./Input_Calendar";
+import Input_Dropdown from "./Input_Dropdown";
+import Upload_Image from "./Upload_Image";
 
 interface FormItemType {
   id?: string;
-  formType?: "input" | "textarea" | "password" | "otp" | "calendar";
-  fieldName: string | undefined;
+  formType?:
+    | "input"
+    | "textarea"
+    | "password"
+    | "otp"
+    | "calendar"
+    | "dropdown"
+    | "image";
+  fieldName: string;
   validator?: any;
   label?: string;
   placeholder?: string;
@@ -22,6 +31,7 @@ interface FormItemType {
   icon?: React.ReactNode;
   style?: string;
   title?: string;
+  optionList?: [];
 }
 
 interface FormProps {
@@ -29,9 +39,16 @@ interface FormProps {
   control: Control<any>;
   errors: Record<string, FieldError | undefined>;
   loading: boolean;
+  setError?: (name: string, error: { type: string; message: string }) => void;
 }
 
-const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
+const Form: React.FC<FormProps> = ({
+  formList,
+  control,
+  errors,
+  loading,
+  setError,
+}) => {
   const [focusedField, setFocusedField] = useState(null);
   const renderField = (
     item: FormItemType,
@@ -117,6 +134,31 @@ const Form: React.FC<FormProps> = ({ formList, control, errors, loading }) => {
             loading={loading}
             disabled={item?.disabled}
             error={errors[item?.fieldName] || error}
+          />
+        );
+      case "image":
+        return (
+          <Upload_Image
+            value={field.value || ""}
+            fieldName={item.fieldName}
+            loading={loading}
+            disabled={item?.disabled}
+            handleChange={field.onChange}
+            error={errors[item.fieldName] || error}
+            setError={setError}
+          />
+        );
+      case "dropdown":
+        return (
+          <Input_Dropdown
+            id={item.id || 0}
+            value={field.value || ""}
+            handleChange={field.onChange}
+            placeholder={item.placeholder || ""}
+            loading={loading}
+            disabled={item?.disabled}
+            error={errors[item?.fieldName] || error}
+            optionList={item.optionList}
           />
         );
       case "textarea":
