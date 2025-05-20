@@ -145,7 +145,7 @@ export const updateProject = asyncWrapper(async (req, res, next) => {
   res.status(200).json(projectSerializer(projectData));
 });
 
-// get projects
+// get projects (manager and admin)
 export const getProjects = asyncWrapper(async (req, res, next) => {
   const user = req.user._id;
   const feature = new ApiFeature(Project.find({ created_by: user }), req.query)
@@ -157,6 +157,15 @@ export const getProjects = asyncWrapper(async (req, res, next) => {
     projects.results = projects.results.map((item) => projectSerializer(item));
   }
   res.status(200).json(projects);
+});
+export const getUsersProjects = asyncWrapper(async (req, res, next) => {
+  const user = req.user._id;
+  const userTeams = await Team.find({ "members.user": user });
+  if (!userTeams) {
+    res.status(200).json([]);
+    return;
+  }
+  // complete
 });
 
 // get project details

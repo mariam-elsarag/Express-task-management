@@ -24,7 +24,7 @@ const Team = lazy(() => import("./pages/team/Team"));
 
 const Project_Container = lazy(() => import("./pages/project/Index"));
 const Project = lazy(() => import("./pages/project/Project"));
-
+const Project_Details = lazy(() => import("./pages/project/Details"));
 const Project_Crud = lazy(() => import("./pages/project/Crud_Project"));
 const Notification_Page = lazy(
   () => import("./pages/notification/Notification")
@@ -45,6 +45,7 @@ const App = () => {
             <Route path="project" element={<Project_Container />}>
               <Route index element={<Project />} />
 
+              <Route path=":id/details" element={<Project_Details />} />
               <Route path="create" element={<Project_Crud />} />
               <Route path=":id/edit" element={<Project_Crud />} />
             </Route>
